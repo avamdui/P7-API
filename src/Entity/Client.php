@@ -32,7 +32,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     private $email;
 
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Customer::class)]
+    #[ORM\OneToMany(mappedBy: 'Client', targetEntity: Customer::class)]
     private $customers;
 
     public function __construct()

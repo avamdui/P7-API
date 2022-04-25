@@ -15,7 +15,7 @@ class Customer
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: client::class, inversedBy: 'customers')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'customers')]
     private $client;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -41,12 +41,12 @@ class Customer
         return $this->id;
     }
 
-    public function getClient(): ?client
+    public function getClient(): ?Client
     {
         return $this->client;
     }
 
-    public function setClient(?client $client): self
+    public function setClient(?Client $client): self
     {
         $this->client = $client;
 
