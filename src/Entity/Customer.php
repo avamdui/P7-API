@@ -6,34 +6,62 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CustomerRepository::class)]
-#[ApiResource]
+/**
+ * @ORM\Table(name="`client`")
+ * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
+ * @UniqueEntity(
+ *  fields={"username"},
+ *  message="Nom utilisateur déjà utilisé"
+ * )
+ * @UniqueEntity(
+ *  fields={"email"},
+ *  message="Email déjà utilisé"
+ * )
+ * @ApiResource
+ */
+
+
 class Customer
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
 
-    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'customers')]
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Client", inversedBy="customers", orphanRemoval=true)
+     */
     private $client;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $firstname;
-
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $lastname;
 
-    #[ORM\Column(type: 'string', length: 10)]
+    /**
+     * @ORM\Column(type="string", length=10)
+     */
     private $phoneNumber;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $email;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $password;
 
-    #[ORM\Column(type: 'datetime')]
+    /**
+     * @ORM\Column(type="datetime")
+     */
     private $createdAt;
 
     public function getId(): ?int

@@ -6,34 +6,61 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PhoneRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PhoneRepository::class)]
-#[ApiResource]
+/**
+ * @ORM\Table(name="`phone`")
+ * @ORM\Entity(repositoryClass="App\Repository\PhoneRepository")
+ * @UniqueEntity(
+ *  fields={"modelName"},
+ *  message="Modèle déja enregistré"
+ * )
+ * @UniqueEntity(
+ *  fields={"ref"},
+ *  message="Référence déjà utilisé"
+ * )
+ * @ApiResource
+ */
+
 class Phone
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $brand;
-
-    #[ORM\Column(type: 'string', length: 100)]
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
     private $modelName;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $ref;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $description;
+    /**
+     * @ORM\Column(type="decimal", precision=6, scale=2)
+     */
 
-    #[ORM\Column(type: 'decimal', precision: 6, scale: 2)]
     private $price;
 
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @ORM\Column(type="integer"))
+     */
     private $stock;
 
-    #[ORM\Column(type: 'datetime')]
+    /**
+     * @ORM\Column(type="datetime")
+     */
     private $createdAt;
 
     public function getId(): ?int
