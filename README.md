@@ -25,3 +25,9 @@ Vous avez le choix entre mettre en place un serveur OAuth et y faire appel (en u
 
 # Présentation des données
 Le premier partenaire de BileMo est très exigeant : il requiert que vous exposiez vos données en suivant les règles des niveaux 1, 2 et 3 du modèle de Richardson. Il a demandé à ce que vous serviez les données en JSON. Si possible, le client souhaite que les réponses soient mises en cache afin d’optimiser les performances des requêtes en direction de l’API.
+
+{
+    "username": "avamdui",
+    "password": "Test007"
+}
+{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTA5NzU0NDgsImV4cCI6MTY1NDU3NTQ0OCwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImF2YW1kdWkifQ.CFhi0h27B1eGReTm55CpA3XRIWUMgUOI7GH5k1ECK8STji-fktWhkT9M0GGbcrYRCUf-w_r0mM-AtYABdcT2OdgkbCnER3z6gBAkHGX0N-ChCVVODXI6JM4NSEKiOEProgVK7LS-gq_x_vTOy1_k0TBKeP45aEBR_S1AugzqZn1S8xKZ2BvY8TWZ0dlhBtdBwAKFhmQvTrZkfwe2FfBvbWVol-SHlE2Kbn10lJr8JHxEjyB3oJ_FsqWToMYR28s4cph_UlIabglYtj5thryiaZ_EjkeycLWBs_2FMgonSK7BQcwerZsyY2MW7kyKxQzq3RtP-Rgm7RiUZ-Facf72xg"}
