@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="`client`")
+ * @ORM\Table(name="`customer`")
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
  * @UniqueEntity(
  *  fields={"username"},
@@ -30,8 +32,9 @@ class Customer
      * @ORM\Column(type="integer")
      */
     private $id;
+
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client", inversedBy="customers", orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="customers")
      */
     private $client;
 
