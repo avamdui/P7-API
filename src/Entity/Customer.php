@@ -4,13 +4,11 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
-use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="`customer`")
- * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
  * @UniqueEntity(
  *  fields={"username"},
  *  message="Nom utilisateur déjà utilisé"
@@ -25,7 +23,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 class Customer
 {
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

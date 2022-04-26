@@ -2,11 +2,9 @@
 
 namespace App\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -68,7 +66,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $email;
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer", mappedBy="Client", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer", mappedBy="client", orphanRemoval=true)
      */
     private $customers;
 
