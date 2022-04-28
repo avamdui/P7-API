@@ -16,6 +16,7 @@
         "friendsofsymfony/rest-bundle": "^3.3",
         "jms/serializer-bundle": "^4.0",
         "lexik/jwt-authentication-bundle": "^2.15",
+        "nelmio/api-doc-bundle": "^4.8",
         "nelmio/cors-bundle": "^2.2",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.4",
@@ -84,7 +85,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "6.0.*"
         }
     },
