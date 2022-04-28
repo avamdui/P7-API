@@ -2,11 +2,9 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
-use App\Repository\PhoneRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="`phone`")
@@ -19,11 +17,11 @@ use Doctrine\ORM\Mapping as ORM;
  *  fields={"ref"},
  *  message="Référence déjà utilisé"
  * )
- * @ApiResource
  */
 class Phone
 {
     /**
+     * 
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -31,20 +29,25 @@ class Phone
     private $id;
 
     /**
+     * 
      * @ORM\Column(type="string", length=255)
+     * @Groups("phone:readall")
      */
     private $brand;
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups("phone:readall")
      */
     private $modelName;
 
     /**
+     * @Groups("phone:readall")
      * @ORM\Column(type="string", length=255)
      */
     private $ref;
 
     /**
+     * @Groups("phone:readall")
      * @ORM\Column(type="string", length=255)
      */
     private $description;
@@ -55,6 +58,7 @@ class Phone
     private $price;
 
     /**
+     * @Groups("phone:readall")
      * @ORM\Column(type="integer"))
      */
     private $stock;
