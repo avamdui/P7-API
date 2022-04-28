@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Phone;
 use App\Repository\PhoneRepository;
-use JMS\Serializer\SerializationContext;
+use Doctrine\ORM\EntityManagerInterface;
 
 use JMS\Serializer\Annotation\Groups;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,8 +25,17 @@ class PhoneController extends AbstractController
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
-
-    public function show()
+    /**
+     * @route("/api/phone/{id}", name="api_phone", methods={"GET"})
+     * @Groups({"phone:showone"})
+     * @param $phone
+     * @param EntityManagerInterface $manager
+     */
+    public function show(Phone $phone, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
     {
+        $id = $phone->getId();
+        $phone = $entityManager->getRepository(Phone::class)->findOneBy(['id' => $id]);
+        $data = $serializer->serialize($phone, 'json', ['groups' => 'phone:showone']);
+        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 }

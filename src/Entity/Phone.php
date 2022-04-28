@@ -25,45 +25,53 @@ class Phone
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("phone:showone")
      */
     private $id;
 
     /**
      * 
      * @ORM\Column(type="string", length=255)
+     * @Groups("phone:showone")
      * @Groups("phone:readall")
      */
     private $brand;
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"phone:showone"})
      * @Groups("phone:readall")
      */
     private $modelName;
 
     /**
      * @Groups("phone:readall")
+     * @Groups("phone:showone")
      * @ORM\Column(type="string", length=255)
      */
     private $ref;
 
     /**
+     * @Groups("phone:showone")
      * @Groups("phone:readall")
      * @ORM\Column(type="string", length=255)
      */
     private $description;
     /**
+     *  @Groups("phone:showone")
      * @ORM\Column(type="decimal", precision=6, scale=2)
      */
 
     private $price;
 
     /**
+     *  @Groups("phone:showone")
      * @Groups("phone:readall")
      * @ORM\Column(type="integer"))
      */
     private $stock;
 
     /**
+     *  @Groups("phone:showone")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
