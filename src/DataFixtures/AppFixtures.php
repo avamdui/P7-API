@@ -86,7 +86,7 @@ class AppFixtures extends Fixture
             $customer->setFirstname($faker->firstName());
             $customer->setLastname($faker->lastName());
             $customer->setEmail($faker->safeEmail());
-            $customer->setPhoneNumber($faker->randomNumber($nbDigits = 6, $strict = true));
+            $customer->setPhoneNumber($faker->randomNumber($nbDigits = 10, $strict = true));
             $customer->setPassword('Password');
             $customer->setClient($faker->randomElement($clients));
             $customer->setCreatedAt($faker->dateTimeBetween($startDate = '-8 months', $endDate = 'now', $timezone = null));

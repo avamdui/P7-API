@@ -26,6 +26,7 @@ class Phone
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * @Groups("phone:showone")
+     * @Groups("phone:readall")
      */
     private $id;
 
