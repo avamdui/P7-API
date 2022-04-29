@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  *  fields={"email"},
  *  message="Email déjà utilisé"
  * )
- * @ApiResource
+
  */
 
 
@@ -27,40 +27,54 @@ class Customer
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("customer:detail")
+     * @Groups("customers:readall")
+     * 
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="customers")
+
      */
     private $client;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("customers:readall")
+     * @Groups("customer:detail")
      */
     private $firstname;
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("customers:readall")
+     * @Groups("customer:detail")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Groups("customers:readall")
+     * @Groups("customer:detail")
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("customers:readall")
+     * @Groups("customer:detail")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("customer:detail")
      */
     private $password;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("customer:detail")
      */
     private $createdAt;
 
