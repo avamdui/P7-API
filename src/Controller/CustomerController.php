@@ -43,4 +43,19 @@ class CustomerController extends AbstractController
         $data = $serializer->serialize($customer, 'json', ['groups' => 'customer:detail']);
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
+
+    public function showCustumerClient(Customer $customer, SerializerInterface $serializer, EntityManagerInterface $entityManager)
+    {
+        //TODO
+    }
+
+    public function addCustumerClient(Customer $customer, SerializerInterface $serializer, EntityManagerInterface $entityManager)
+    {
+        //TODO
+    }
+
+    public function deleteCustumerClient(Customer $customer, SerializerInterface $serializer, EntityManagerInterface $entityManager)
+    {
+        //TODO
+    }
 }
