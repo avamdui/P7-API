@@ -6,8 +6,6 @@ use App\Entity\Phone;
 use App\Repository\PhoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Annotations as OA;
-use Knp\Component\Pager\PaginatorInterface;
-use JMS\Serializer\Annotation\Groups;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,11 +14,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use JMS\Serializer\Annotation\Groups;
 
 class PhoneController extends AbstractController
 {
     /**
-     * @route("/api/phones", name="api_phones", methods={"GET"})
+     * @OA\Get(path="/api/phones", @OA\Response(response="200", description="All smartphones"))
+     * @Route("/api/phones", name="api_phones", methods={"GET"})
      * @Groups({"phone:readall"})
      */
     public function list(PhoneRepository $phoneRepository, SerializerInterface $serializer, Request $request, PaginatorInterface $paginator, CacheInterface $cache): Response
@@ -36,10 +37,9 @@ class PhoneController extends AbstractController
     }
 
     /**
-     * @route("/api/phone/{id}", name="api_phone", methods={"GET"})
+     * @OA\Get(path="/api/phone/{id}", @OA\Response(response="200", description="Get detail about a specific smartphone"))
+     * @Route("/api/phone/{id}", name="api_phone", methods={"GET"})
      * @Groups({"phone:showone"})
-     * @param $phone
-     * @param EntityManagerInterface $manager
      */
     public function show(Phone $phone, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
     {
