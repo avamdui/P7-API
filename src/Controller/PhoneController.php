@@ -6,10 +6,12 @@ use App\Entity\Phone;
 use App\Repository\PhoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Annotations as OA;
+use Knp\Component\Pager\PaginatorInterface;
 use JMS\Serializer\Annotation\Groups;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class PhoneController extends AbstractController
@@ -18,10 +20,11 @@ class PhoneController extends AbstractController
      * @route("/api/phones", name="api_phones", methods={"GET"})
      * @Groups({"phone:readall"})
      */
-    public function list(PhoneRepository $phoneRepository, SerializerInterface $serializer): JsonResponse
+    public function list(PhoneRepository $phoneRepository, SerializerInterface $serializer, Request $request, PaginatorInterface $paginator): JsonResponse
     {
         $phones = $phoneRepository->findAll();
-        $data = $serializer->serialize($phones, 'json', ['groups' => 'phone:readall']);
+        $phonesPaginate = $paginator->paginate($phones, $request->get('page', 1), 5);
+        $data = $serializer->serialize($phonesPaginate, 'json', ['groups' => 'phone:readall']);
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
