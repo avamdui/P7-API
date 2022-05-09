@@ -37,7 +37,7 @@ class CustomerController extends AbstractController
         $data = $this->serializer->serialize($customers, 'json', ['groups' => 'customers:readall']);
 
         $result = $cache->get('resultat', function (ItemInterface $item) use ($data, $customers) {
-            $item->expiresAfter(5);
+            $item->expiresAfter(3600);
             return new Response($data, 200, array('Content-Type' => 'application/json'), $customers);
         });
         return $result;

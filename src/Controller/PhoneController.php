@@ -30,7 +30,7 @@ class PhoneController extends AbstractController
         $phonesPaginate = $paginator->paginate($phones, $request->get('page', 1), 5);
         $data = $serializer->serialize($phonesPaginate, 'json', ['groups' => 'phone:readall']);
         $result = $cache->get('resultat', function (ItemInterface $item) use ($data, $phones) {
-            $item->expiresAfter(5);
+            $item->expiresAfter(3600);
             return new Response($data, 200, array('Content-Type' => 'application/json'), $phones);
         });
         return $result;
