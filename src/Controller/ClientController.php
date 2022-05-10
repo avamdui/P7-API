@@ -34,12 +34,11 @@ class ClientController extends AbstractController
         $clients = $paginator->paginate($clients, $request->get('page', 1), 5);
         $data = $this->serializer->serialize($clients, 'json', ['groups' => 'clients:readall']);
 
-        // $result = $cache->get('clients', function (ItemInterface $item) use ($data, $clients) {
-        //     $item->expiresAfter(3600);
-        //     return new Response($data, 200, array('Content-Type' => 'application/json'), $data);
-        // });
-        // return $result;
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+        $result = $cache->get('clients', function (ItemInterface $item) use ($data, $clients) {
+            $item->expiresAfter(3600);
+            return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+        });
+        return $result;
     }
 
     

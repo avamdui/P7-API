@@ -36,13 +36,11 @@ class CustomerController extends AbstractController
         $customersPaginate = $paginator->paginate($customers, $request->get('page', 1), 5);
         $data = $this->serializer->serialize($customersPaginate, 'json', ['groups' => 'customers:readall']);
 
-        // $result = $cache->get('customers', function (ItemInterface $item) use ($data, $customers) {
-        //     $item->expiresAfter(3600);
-        //     return new Response($data, 200, array('Content-Type' => 'application/json'), $customers);
-        // });
-        // return $result;
-
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+        $result = $cache->get('customers', function (ItemInterface $item) use ($data, $customers) {
+            $item->expiresAfter(3600);
+            return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+        });
+        return $result;
     }
 
     
