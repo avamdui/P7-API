@@ -33,14 +33,16 @@ class CustomerController extends AbstractController
         $client = $this->getUser();
         $id = $client->getId();
         $customers = $customerRepository->findBy(array('client'=>$id));
-        $customers = $paginator->paginate($customers, $request->get('page', 1), 5);
-        $data = $this->serializer->serialize($customers, 'json', ['groups' => 'customers:readall']);
+        $customersPaginate = $paginator->paginate($customers, $request->get('page', 1), 5);
+        $data = $this->serializer->serialize($customersPaginate, 'json', ['groups' => 'customers:readall']);
 
-        $result = $cache->get('resultat', function (ItemInterface $item) use ($data, $customers) {
-            $item->expiresAfter(3600);
-            return new Response($data, 200, array('Content-Type' => 'application/json'), $customers);
-        });
-        return $result;
+        // $result = $cache->get('customers', function (ItemInterface $item) use ($data, $customers) {
+        //     $item->expiresAfter(3600);
+        //     return new Response($data, 200, array('Content-Type' => 'application/json'), $customers);
+        // });
+        // return $result;
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
     
@@ -54,11 +56,6 @@ class CustomerController extends AbstractController
         $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $id]);
         $data = $serializer->serialize($customer, 'json', ['groups' => 'customer:detail']);
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
-    }
-
-    public function showCustumerClient(Customer $customer, SerializerInterface $serializer, EntityManagerInterface $entityManager)
-    {
-        //TODO
     }
 
     public function addCustumerClient(Customer $customer, SerializerInterface $serializer, EntityManagerInterface $entityManager)

@@ -27,13 +27,16 @@ class PhoneController extends AbstractController
     public function list(PhoneRepository $phoneRepository, SerializerInterface $serializer, Request $request, PaginatorInterface $paginator, CacheInterface $cache): Response
     {
         $phones = $phoneRepository->findAll();
-        $phonesPaginate = $paginator->paginate($phones, $request->get('page', 1), 5);
-        $data = $serializer->serialize($phonesPaginate, 'json', ['groups' => 'phone:readall']);
-        $result = $cache->get('resultat', function (ItemInterface $item) use ($data, $phones) {
-            $item->expiresAfter(3600);
-            return new Response($data, 200, array('Content-Type' => 'application/json'), $phones);
-        });
-        return $result;
+        $phones = $paginator->paginate($phones, $request->get('page', 1), 5);
+        
+        $data = $serializer->serialize($phones, 'json', ['groups' => 'phone:readall']);
+        // $result = $cache->get('phones', function (ItemInterface $item) use ($data, $phones) {
+        //     $item->expiresAfter(3600);
+        //     return new Response($data, 200, array('Content-Type' => 'application/json'), $phones);
+        // });
+        // return $result;
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
     /**

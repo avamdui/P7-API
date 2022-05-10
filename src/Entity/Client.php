@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -29,20 +30,25 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("client:detail")
+     * @Groups("clients:readall")
      */
     private $id;
     /**
+     * @Groups("client:detail")
+     * @Groups("clients:readall")
      * @ORM\Column(type="string", length=100)
      */
     private $username;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups("client:detail")
      */
     private $roles = [];
     /**
      * @ORM\Column(type="string", length=100)
-     * 
+     *
      * @Assert\Length(
      *      min = 8,
      *      max = 254,
@@ -59,9 +65,13 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("client:detail")
+     * @Groups("clients:readall")
      */
     private $company;
     /**
+     * @Groups("client:detail")
+     * @Groups("clients:readall")
      * @ORM\Column(type="string", length=255)
      */
     private $email;
