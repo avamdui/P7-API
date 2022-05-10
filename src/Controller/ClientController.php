@@ -41,7 +41,7 @@ class ClientController extends AbstractController
         return $result;
     }
 
-    
+
     /**
      * @OA\Get(path="/api/client/{id}", @OA\Response(response="200", description="client détail"))
      * @Route("/api/client/{id}", name="api_client_id", methods={"GET"})
