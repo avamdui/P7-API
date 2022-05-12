@@ -4,78 +4,72 @@ namespace App\Entity;
 
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="`customer`")
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
  * @UniqueEntity(
- *  fields={"username"},
- *  message="Nom utilisateur déjà utilisé"
- * )
- * @UniqueEntity(
  *  fields={"email"},
  *  message="Email déjà utilisé"
  * )
-
  */
-
-
 class Customer
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("customer:detail")
-     * @Groups("customers:readall")
-     * 
+     * @groups({"Full", "detail"})
+     * @OA\Property(example="251", description="The unique identifier of the user.")
+     *
      */
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="customers")
-
-     */
+    * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="customers")
+    */
     private $client;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups("customers:readall")
-     * @Groups("customer:detail")
-     */
+    * @ORM\Column(type="string", length=255)
+    * @groups({"Full", "detail", "create"})
+    * @OA\Property(example="Alex")
+    */
     private $firstname;
+
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups("customers:readall")
-     * @Groups("customer:detail")
-     */
+    * @ORM\Column(type="string", length=255)
+    * @groups({"Full", "detail", "create"})
+    */
     private $lastname;
 
     /**
-     * @ORM\Column(type="string", length=10)
-     * @Groups("customers:readall")
-     * @Groups("customer:detail")
-     */
+    * @ORM\Column(type="string", length=10)
+    * @groups({"Full", "detail", "create"})
+    * @OA\Property(example="0607080910")
+    */
     private $phoneNumber;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups("customers:readall")
-     * @Groups("customer:detail")
-     */
+    * @ORM\Column(type="string", length=255)
+    * @OA\Property(example="Alex.duchien@voila.fr")
+    * @groups({"Full", "detail", "create"})
+    */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups("customer:detail")
-     */
+    * @ORM\Column(type="string", length=255)
+    * @groups({"Full", "detail", "create"})
+    */
     private $password;
 
     /**
-     * @ORM\Column(type="datetime")
-     * @Groups("customer:detail")
-     */
+    * @ORM\Column(type="datetime")
+    * @groups({"Full", "detail"})
+    */
     private $createdAt;
 
     public function getId(): ?int
