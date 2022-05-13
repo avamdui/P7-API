@@ -1,16 +1,30 @@
 nelmio_api_doc:
     models: { use_jms: false }
     documentation:
+        servers:
+          - url: https://127.0.0.1:8000/api/doc
+            description: API over HTTP
         info:
-            title: My App
-            description: This is an awesome app!
+            title: BileMo 
+            description: Téléphones mobiles haut de gamme.
             version: 1.0.0
+            
+        tags:
+            - name: "Customer"
+              description: "Customer related endpoints"
+            - name: "Phones"
+              description: "Phones related endpoints"
+            - name: "Client"
+              description: "Client related endpoints"
         components:
             securitySchemes:
                 Bearer:
                     type: http
                     scheme: bearer
                     bearerFormat: JWT
-    areas: # to filter documented areas
-        path_patterns:
-            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+    areas:
+        default:
+            disable_default_routes: true
+
+
+        

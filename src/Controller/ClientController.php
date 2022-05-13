@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use App\Entity\Client;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,8 +27,13 @@ class ClientController extends AbstractController
         $this->serializer = $serializer;
     }
     /**
-     * @OA\Get(path="/api/clients", @OA\Response(response="200", description="All clients"))
+     * @OA\Get(path="/api/clients")
      * @Route("/api/clients", name="api_clients", methods={"GET"})
+     * @OA\Response(response=200,description="Returns the list of clients")
+    * @OA\Response(response=404, description="Not found" ),
+    * @OA\Response(response=400, description="Bad Request"))
+    * @OA\Tag(name="Client")
+    * @Security(name="Bearer")
      */
     public function listClient(ClientRepository $clientRepository, Request $request, PaginatorInterface $paginator, CacheInterface $cache)
     {
@@ -36,15 +43,20 @@ class ClientController extends AbstractController
 
         $result = $cache->get('clients', function (ItemInterface $item) use ($data, $clients) {
             $item->expiresAfter(3600);
-            return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+            return new JsonResponse($data, JsonResponse::HTTP_OK, ["test"], true);
         });
         return $result;
     }
 
 
     /**
-     * @OA\Get(path="/api/client/{id}", @OA\Response(response="200", description="client détail"))
+     * @OA\Get(path="/api/client/{id}")
      * @Route("/api/client/{id}", name="api_client_id", methods={"GET"})
+    * @OA\Response(response=200,description="Returns specific client according to his id")
+    * @OA\Response(response=404, description="Not found" ),
+    * @OA\Response(response=400, description="Bad Request"))
+    * @OA\Tag(name="Client")
+        * @Security(name="Bearer")
      */
     public function show(Client $client, SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {

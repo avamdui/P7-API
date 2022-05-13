@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use App\Entity\Phone;
 use App\Repository\PhoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,9 +22,13 @@ use JMS\Serializer\Annotation\Groups;
 class PhoneController extends AbstractController
 {
     /**
-     * @OA\Get(path="/api/phones", @OA\Response(response="200", description="All smartphones"))
-     * @Route("/api/phones", name="api_phones", methods={"GET"})
-     * @Groups({"phone:readall"})
+    * @OA\Get(path="/api/phones")
+    * @Route("/api/phones", name="api_phones", methods={"GET"})
+    * @OA\Response(response=200,description="Returns the list of all smartphones")
+    * @OA\Response(response=404, description="Not found" ),
+    * @OA\Response(response=400, description="Bad Request"))
+    * @OA\Tag(name="Phones")
+    * @Security(name="Bearer")
      */
     public function list(PhoneRepository $phoneRepository, SerializerInterface $serializer, Request $request, PaginatorInterface $paginator, CacheInterface $cache): Response
     {
@@ -36,14 +42,16 @@ class PhoneController extends AbstractController
             return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
         });
         return $result;
-
-        // return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
     /**
-     * @OA\Get(path="/api/phone/{id}", @OA\Response(response="200", description="Get detail about a specific smartphone"))
-     * @Route("/api/phone/{id}", name="api_phone", methods={"GET"})
-     * @Groups({"phone:showone"})
+    * @OA\Get(path="/api/phone/{id}")
+    * @Route("/api/phone/{id}", name="api_phone", methods={"GET"})
+    * @OA\Response(response=200,description="Get detail about a specific smartphone")
+    * @OA\Response(response=404, description="Not found" ),
+    * @OA\Response(response=400, description="Bad Request"))
+    * @OA\Tag(name="Phones")
+    * @Security(name="Bearer")
      */
     public function show(Phone $phone, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
     {
