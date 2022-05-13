@@ -2,7 +2,7 @@ nelmio_api_doc:
     models: { use_jms: false }
     documentation:
         servers:
-          - url: https://127.0.0.1:8000/api/doc
+          - url: https://127.0.0.1:8000/
             description: API over HTTP
         info:
             title: BileMo 
@@ -11,11 +11,11 @@ nelmio_api_doc:
             
         tags:
             - name: "Customer"
-              description: "Customer related endpoints"
+              description: " Get details about Customer"
             - name: "Phones"
-              description: "Phones related endpoints"
+              description: "Get details and list of phones"
             - name: "Client"
-              description: "Client related endpoints"
+              description: "Get details about Client"
         components:
             securitySchemes:
                 Bearer:
