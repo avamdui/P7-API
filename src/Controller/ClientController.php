@@ -29,7 +29,14 @@ class ClientController extends AbstractController
     /**
      * @OA\Get(path="/api/clients")
      * @Route("/api/clients", name="api_clients", methods={"GET"})
-     * @OA\Response(response=200,description="Returns the list of clients")
+    * @OA\Response(
+     *     response=200,
+     *     description="Returns the list of clients",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Client::class, groups={"Full"}))
+     *     )
+     * )
     * @OA\Response(response=404, description="Not found" ),
     * @OA\Response(response=400, description="Bad Request"))
     * @OA\Tag(name="Client")
@@ -39,7 +46,7 @@ class ClientController extends AbstractController
     {
         $clients = $clientRepository->findAll();
         $clients = $paginator->paginate($clients, $request->get('page', 1), 5);
-        $data = $this->serializer->serialize($clients, 'json', ['groups' => 'clients:readall']);
+        $data = $this->serializer->serialize($clients, 'json', ['groups' => 'Full']);
 
         $result = $cache->get('clients', function (ItemInterface $item) use ($data, $clients) {
             $item->expiresAfter(3600);
@@ -52,7 +59,14 @@ class ClientController extends AbstractController
     /**
      * @OA\Get(path="/api/client/{id}")
      * @Route("/api/client/{id}", name="api_client_id", methods={"GET"})
-    * @OA\Response(response=200,description="Returns specific client according to his id")
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns specific client according to his id",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Client::class, groups={"detail"}))
+     *     )
+     * )
     * @OA\Response(response=404, description="Not found" ),
     * @OA\Response(response=400, description="Bad Request"))
     * @OA\Tag(name="Client")
@@ -62,7 +76,7 @@ class ClientController extends AbstractController
     {
         $id = $client->getId();
         $client = $entityManager->getRepository(Client::class)->findOneBy(['id' => $id]);
-        $data = $serializer->serialize($client, 'json', ['groups' => 'client:detail']);
+        $data = $serializer->serialize($client, 'json', ['groups' => 'detail']);
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 }

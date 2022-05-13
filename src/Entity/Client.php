@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use OpenApi\Annotations as OA;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -30,20 +31,19 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("client:detail")
-     * @Groups("clients:readall")
+    * @groups({"Full", "detail"})
      */
     private $id;
     /**
-     * @Groups("client:detail")
-     * @Groups("clients:readall")
+    * @groups({"Full", "detail"})
      * @ORM\Column(type="string", length=100)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="json")
-     * @Groups("client:detail")
+    * @ORM\Column(type="json")
+    * @OA\Property(type="array", @OA\Items(type="string"))
+    * @groups({"detail"})
      */
     private $roles = [];
     /**
@@ -65,13 +65,11 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("client:detail")
-     * @Groups("clients:readall")
+    * @groups({"Full", "detail"})
      */
     private $company;
     /**
-     * @Groups("client:detail")
-     * @Groups("clients:readall")
+    * @groups({"Full", "detail"})
      * @ORM\Column(type="string", length=255)
      */
     private $email;

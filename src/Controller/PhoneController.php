@@ -24,7 +24,14 @@ class PhoneController extends AbstractController
     /**
     * @OA\Get(path="/api/phones")
     * @Route("/api/phones", name="api_phones", methods={"GET"})
-    * @OA\Response(response=200,description="Returns the list of all smartphones")
+    * @OA\Response(
+     *     response=200,
+     *     description="Returns the list of all smartphones",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Phone::class, groups={"Full"}))
+     *     )
+     * )
     * @OA\Response(response=404, description="Not found" ),
     * @OA\Response(response=400, description="Bad Request"))
     * @OA\Tag(name="Phones")
@@ -35,7 +42,7 @@ class PhoneController extends AbstractController
         $phones = $phoneRepository->findAll();
         $phones = $paginator->paginate($phones, $request->get('page', 1), 5);
         
-        $data = $serializer->serialize($phones, 'json', ['groups' => 'phone:readall']);
+        $data = $serializer->serialize($phones, 'json', ['groups' => 'Full']);
 
         $result = $cache->get('phones', function (ItemInterface $item) use ($data, $phones) {
             $item->expiresAfter(3600);
@@ -47,7 +54,14 @@ class PhoneController extends AbstractController
     /**
     * @OA\Get(path="/api/phone/{id}")
     * @Route("/api/phone/{id}", name="api_phone", methods={"GET"})
-    * @OA\Response(response=200,description="Get detail about a specific smartphone")
+    * @OA\Response(
+     *     response=200,
+     *     description="Get detail about a specific smartphone",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Phone::class, groups={"detail"}))
+     *     )
+     * )
     * @OA\Response(response=404, description="Not found" ),
     * @OA\Response(response=400, description="Bad Request"))
     * @OA\Tag(name="Phones")
@@ -57,7 +71,7 @@ class PhoneController extends AbstractController
     {
         $id = $phone->getId();
         $phone = $entityManager->getRepository(Phone::class)->findOneBy(['id' => $id]);
-        $data = $serializer->serialize($phone, 'json', ['groups' => 'phone:showone']);
+        $data = $serializer->serialize($phone, 'json', ['groups' => 'detail']);
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 }

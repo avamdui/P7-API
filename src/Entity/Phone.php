@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use OpenApi\Annotations as OA;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -21,52 +22,46 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Phone
 {
     /**
-     * 
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("phone:showone")
-     * @Groups("phone:readall")
+    * @groups({"Full", "detail"})
      */
     private $id;
 
     /**
-     * 
+     *
      * @ORM\Column(type="string", length=255)
-     * @Groups("phone:showone")
-     * @Groups("phone:readall")
+    * @groups({"Full", "detail"})
      */
     private $brand;
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"phone:showone"})
-     * @Groups("phone:readall")
+    * @groups({"Full", "detail"})
      */
     private $modelName;
 
     /**
-     * @Groups("phone:readall")
-     * @Groups("phone:showone")
+    * @groups({"Full", "detail"})
      * @ORM\Column(type="string", length=255)
      */
     private $ref;
 
     /**
-     * @Groups("phone:showone")
-     * @Groups("phone:readall")
+    * @groups({"Full", "detail"})
      * @ORM\Column(type="string", length=255)
      */
     private $description;
     /**
-     *  @Groups("phone:showone")
+    * @groups({"detail"})
      * @ORM\Column(type="decimal", precision=6, scale=2)
      */
 
     private $price;
 
     /**
-     *  @Groups("phone:showone")
-     * @Groups("phone:readall")
+    * @groups({"Full", "detail"})
      * @ORM\Column(type="integer"))
      */
     private $stock;
