@@ -50,6 +50,8 @@ class CustomerController extends AbstractController
         $id = $client->getId();
         $customers = $customerRepository->findBy(array('client'=>$id));
         $customersPaginate = $paginator->paginate($customers, $request->get('page', 1), 5);
+        $page =  $request->query->getInt('page', 1);
+          
         $data = $this->serializer->serialize($customersPaginate, 'json', ['groups' => 'Full']);
 
         // $result = $cache->get('customers', function (ItemInterface $item) use ($data, $customers) {
@@ -58,7 +60,7 @@ class CustomerController extends AbstractController
         // });
         // return $result;
 
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+        return new JsonResponse($data, JsonResponse::HTTP_OK, ['page' => $page ], true);
     }
 
     
