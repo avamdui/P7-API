@@ -34,10 +34,10 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     * @groups({"Full", "detail"})
      */
     private $id;
-     /**
-     * @groups({"Full", "detail", "login"})
-     * @ORM\Column(type="string", length=100)
-     */
+    /**
+    * @groups({"Full", "detail", "login"})
+    * @ORM\Column(type="string", length=100)
+    */
     private $username;
 
     /**
@@ -48,7 +48,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     private $roles = [];
     /**
      * @ORM\Column(type="string", length=100)
-     *
+     * @groups({"login"})
      * @Assert\Length(
      *      min = 8,
      *      max = 254,
@@ -65,7 +65,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-    * @groups({"Full", "detail", "login"})
+    * @groups({"Full", "detail"})
      */
     private $company;
     /**
