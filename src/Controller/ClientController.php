@@ -27,8 +27,24 @@ class ClientController extends AbstractController
         $this->serializer = $serializer;
     }
     /**
-     * @OA\Get(path="/api/clients")
-     * @Route("/api/clients", name="api_clients", methods={"GET"})
+     * @OA\Post(path="/api/login_check")
+    * @OA\Response(
+     *     response=200,
+     *     description="Successful authentication'",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Client::class, groups={"login"}))
+     *     )
+     * )
+     * @Route("/api/login_check", name="login_check", methods={"POST"})
+     * @OA\Tag(name="Client")
+     */
+    public function login()
+    {
+    }
+    /**
+    * @OA\Get(path="/api/clients")
+    * @Route("/api/clients", name="api_clients", methods={"GET"})
     * @OA\Response(
      *     response=200,
      *     description="Returns the list of clients",

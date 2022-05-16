@@ -34,8 +34,8 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     * @groups({"Full", "detail"})
      */
     private $id;
-    /**
-    * @groups({"Full", "detail"})
+     /**
+     * @groups({"Full", "detail", "login"})
      * @ORM\Column(type="string", length=100)
      */
     private $username;
@@ -65,7 +65,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-    * @groups({"Full", "detail"})
+    * @groups({"Full", "detail", "login"})
      */
     private $company;
     /**
