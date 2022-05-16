@@ -4,13 +4,11 @@ namespace App\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use ApiPlatform\Core\Filter\Validator\ValidatorInterface;
 use App\Entity\Client;
 use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use JMS\Serializer\SerializationContext;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -21,7 +19,6 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use OpenApi\Annotations as OA;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class CustomerController extends AbstractController
 {
@@ -34,7 +31,7 @@ class CustomerController extends AbstractController
     /**
     * @OA\Get(path="/api/customers")
     * @Route("/api/customers", name="api_customers", methods={"GET"})
-        * @OA\Response(
+    * @OA\Response(
      *     response=200,
      *     description="Returns the Customer's client'",
      *     @OA\JsonContent(
@@ -55,11 +52,13 @@ class CustomerController extends AbstractController
         $customersPaginate = $paginator->paginate($customers, $request->get('page', 1), 5);
         $data = $this->serializer->serialize($customersPaginate, 'json', ['groups' => 'Full']);
 
-        $result = $cache->get('customers', function (ItemInterface $item) use ($data, $customers) {
-            $item->expiresAfter(3600);
-            return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
-        });
-        return $result;
+        // $result = $cache->get('customers', function (ItemInterface $item) use ($data, $customers) {
+        //     $item->expiresAfter(3600);
+        //     return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+        // });
+        // return $result;
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
     
@@ -107,6 +106,7 @@ class CustomerController extends AbstractController
      */
     public function create(Request $request, EntityManagerInterface $em, SerializerInterface $serializer) : JsonResponse
     {
+        // try Valid catch erreur
         $customer = $request->getContent();
         $customer = $serializer->deserialize($customer, Customer::class, 'json');
         $customer->setCreatedAt(new DateTime())
@@ -116,18 +116,27 @@ class CustomerController extends AbstractController
         
         $data = $serializer->serialize($customer, 'json', ['groups' => 'detail']);
         return new JsonResponse($data, Response::HTTP_CREATED, [], true);
+        // return $this->json(['result' => 'Customer created']);
     }
 
     /**
-     * @OA\Delete(path="/api/customer/{id}", @OA\Response(response="204", description="delete a client", @OA\JsonContent(type="string")))
-     * @Route("/api/customer/{id}", name="api_delete_customer_id", methods = {"DELETE"})
+    * @OA\Delete(path="/api/customer/{id}", @OA\Response(response="204", description="delete a client", @OA\JsonContent(type="string")))
+    * @Route("/api/customer/{id}", name="api_delete_customer_id",requirements={"id":"\d+"}, methods = {"DELETE"})
     * @OA\Tag(name="Customer")
     * @Security(name="Bearer")
-     */
-    public function DeleteCustumerClient(Customer $customer, EntityManagerInterface $entityManager)
+    */
+    public function DeleteCustumerClient($id, EntityManagerInterface $entityManager)
     {
+        $customer = $entityManager->getRepository(Customer::class)->find($id);
+        if (!$customer) {
+            $data= [
+            'status' => 404,
+            'message' => 'Customer not found'
+        ];
+            return $this->json($data, 404);
+        }
         $entityManager->remove($customer);
         $entityManager->flush();
-        return $this->json(['result' => 'client successfully deleted']);
+        return new JsonResponse('', '204', [], true);
     }
 }
