@@ -50,7 +50,7 @@ class CustomerController extends AbstractController
         $fullProductsCount = count($customers);
         // $fullProductsCount = '25';
         $lastPage = ceil($fullProductsCount / $PageItemsLimit);
-        $customers = $paginator->paginate($customers, $request->get('page', 1), $PageItemsLimit);
+        $customers = $paginator->paginate($customers, $CurrentPage, $PageItemsLimit);
 
         $content = [
             'meta' => [
@@ -72,7 +72,7 @@ class CustomerController extends AbstractController
         // });
         // return $result;
 
-        return new JsonResponse($data, JsonResponse::HTTP_OK, ['page' => $page ], true);
+        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
     
