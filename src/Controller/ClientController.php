@@ -88,8 +88,17 @@ class ClientController extends AbstractController
     * @OA\Tag(name="Client")
         * @Security(name="Bearer")
      */
-    public function show(Client $client, SerializerInterface $serializer, EntityManagerInterface $entityManager)
+    public function show($id, SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {
+        $client = $entityManager->getRepository(Client::class)->find($id);
+        if (!$client) {
+            $data= [
+            'status' => 404,
+            'message' => 'Clients not found'
+        ];
+            return $this->json($data, 404);
+        }
+
         $id = $client->getId();
         $client = $entityManager->getRepository(Client::class)->findOneBy(['id' => $id]);
         $data = $serializer->serialize($client, 'json', ['groups' => 'detail']);

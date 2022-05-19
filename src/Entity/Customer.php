@@ -6,6 +6,7 @@ use OpenApi\Annotations as OA;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="`customer`")
@@ -28,11 +29,13 @@ class Customer
     private $id;
 
     /**
+    * @Assert\NotBlank
     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="customers")
     */
     private $client;
 
     /**
+    * @Assert\NotBlank
     * @ORM\Column(type="string", length=255)
     * @groups({"Full", "detail", "create"})
     * @OA\Property(example="Alex")
@@ -40,12 +43,15 @@ class Customer
     private $firstname;
 
     /**
+     * @Assert\NotBlank
     * @ORM\Column(type="string", length=255)
     * @groups({"Full", "detail", "create"})
     */
     private $lastname;
 
     /**
+     * @Assert\NotBlank
+       * @Assert\Unique
     * @ORM\Column(type="string", length=10)
     * @groups({"Full", "detail", "create"})
     * @OA\Property(example="0607080910")
@@ -53,6 +59,8 @@ class Customer
     private $phoneNumber;
 
     /**
+    * @Assert\NotBlank
+    * @Assert\Unique
     * @ORM\Column(type="string", length=255)
     * @OA\Property(example="Alex.duchien@voila.fr")
     * @groups({"Full", "detail", "create"})
@@ -60,12 +68,14 @@ class Customer
     private $email;
 
     /**
+     * @Assert\NotBlank
     * @ORM\Column(type="string", length=255)
     * @groups({"Full", "detail", "create"})
     */
     private $password;
 
     /**
+     * @Assert\NotBlank
     * @ORM\Column(type="datetime")
     * @groups({"Full", "detail"})
     */

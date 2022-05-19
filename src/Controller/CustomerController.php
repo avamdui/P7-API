@@ -19,6 +19,8 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use OpenApi\Annotations as OA;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CustomerController extends AbstractController
 {
@@ -80,8 +82,17 @@ class CustomerController extends AbstractController
     * @OA\Tag(name="Customer")
     * @Security(name="Bearer")
      */
-    public function show(Customer $customer, SerializerInterface $serializer, EntityManagerInterface $entityManager)
+    public function show($id, SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {
+        $customer = $entityManager->getRepository(Customer::class)->find($id);
+        if (!$customer) {
+            $data= [
+            'status' => 404,
+            'message' => 'Customer not found'
+        ];
+            return $this->json($data, 404);
+        }
+
         $id = $customer->getId();
         $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $id]);
         $data = $serializer->serialize($customer, 'json', ['groups' => 'detail']);
@@ -106,18 +117,26 @@ class CustomerController extends AbstractController
     * @Security(name="Bearer")
 
      */
-    public function create(Request $request, EntityManagerInterface $em, SerializerInterface $serializer) : JsonResponse
+    public function create(Request $request, EntityManagerInterface $em, SerializerInterface $serializer, ValidatorInterface $validator) : JsonResponse
     {
-        // try Valid catch erreur
-        $customer = $request->getContent();
-        $customer = $serializer->deserialize($customer, Customer::class, 'json');
-        $customer->setCreatedAt(new DateTime())
-                 ->setClient($this->getUser());
-        $em->persist($customer);
-        $em->flush();
-        
-        $data = $serializer->serialize($customer, 'json', ['groups' => 'detail']);
-        return new JsonResponse($data, Response::HTTP_CREATED, [], true);
+        try {
+            $customer = $request->getContent();
+            $customer = $serializer->deserialize($customer, Customer::class, 'json');
+            $customer->setCreatedAt(new DateTime())
+                     ->setClient($this->getUser());
+            $error = $validator->validate($customer);
+
+            if (count($error)>0) {
+                return $this->json($error, 400);
+            }
+            $em->persist($customer);
+            $em->flush();
+            $data = $serializer->serialize($customer, 'json', ['groups' => 'detail']);
+            return new JsonResponse($data, Response::HTTP_CREATED, [], true);
+        } catch (NotEncodableValueException $e) {
+            return $this->json(array('status'=>400, 'message'=>$e->getMessage()), 400);
+        }
+
         // return $this->json(['result' => 'Customer created']);
     }
 

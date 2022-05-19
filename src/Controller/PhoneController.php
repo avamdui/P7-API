@@ -17,7 +17,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use JMS\Serializer\Annotation\Groups;
 
 class PhoneController extends AbstractController
 {
@@ -37,18 +36,27 @@ class PhoneController extends AbstractController
     * @OA\Tag(name="Phones")
     * @Security(name="Bearer")
      */
-    public function list(PhoneRepository $phoneRepository, SerializerInterface $serializer, Request $request, PaginatorInterface $paginator, CacheInterface $cache): Response
+    public function list(PhoneRepository $phoneRepository, SerializerInterface $serializer, Request $request, PaginatorInterface $paginator): Response
     {
         $phones = $phoneRepository->findAll();
-        $phones = $paginator->paginate($phones, $request->get('page', 1), 5);
-        
-        $data = $serializer->serialize($phones, 'json', ['groups' => 'Full']);
+        $CurrentPage = $request->get('page', 1);
+        $PageItemsLimit = 5;
+        $fullProductsCount = count($phones);
+        // $fullProductsCount = '25';
+        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
+        $phones = $paginator->paginate($phones, $request->get('page', 1), $PageItemsLimit);
 
-        $result = $cache->get('phones', function (ItemInterface $item) use ($data, $phones) {
-            $item->expiresAfter(3600);
-            return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
-        });
-        return $result;
+        $content = [
+            'meta' => [
+                'TotalPhones' => $fullProductsCount,
+                'maxItemsPerPage' => $PageItemsLimit,
+                'lastPage' => $lastPage,
+                'currentPage' => $CurrentPage
+            ],
+            'data' => $phones
+        ];
+        $data = $serializer->serialize($content, 'json', ['groups' => 'Full']);
+        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
     /**
@@ -67,8 +75,17 @@ class PhoneController extends AbstractController
     * @OA\Tag(name="Phones")
     * @Security(name="Bearer")
      */
-    public function show(Phone $phone, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+    public function show($id, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
     {
+        $phone = $entityManager->getRepository(Phone::class)->find($id);
+        if (!$phone) {
+            $data= [
+            'status' => 404,
+            'message' => 'Phone not found'
+        ];
+            return $this->json($data, 404);
+        }
+       
         $id = $phone->getId();
         $phone = $entityManager->getRepository(Phone::class)->findOneBy(['id' => $id]);
         $data = $serializer->serialize($phone, 'json', ['groups' => 'detail']);
