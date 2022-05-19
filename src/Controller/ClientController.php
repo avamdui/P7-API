@@ -20,6 +20,17 @@ use Knp\Component\Pager\PaginatorInterface;
 
 class ClientController extends AbstractController
 {
+    private $repo;
+    private $cache;
+    private $paginate;
+    private $serializer;
+    public function __construct(ClientRepository $ClientRepository, PaginatorInterface $paginator, CacheInterface $cache, SerializerInterface $serializer)
+    {
+        $this->repo = $ClientRepository;
+        $this->paginate = $paginator;
+        $this->cache = $cache;
+        $this->serializer = $serializer;
+    }
     /**
      * @OA\Post(path="/api/login_check")
     * @OA\Response(
@@ -52,27 +63,39 @@ class ClientController extends AbstractController
     * @OA\Tag(name="Client")
     * @Security(name="Bearer")
      */
-    public function listClient(ClientRepository $clientRepository, Request $request, PaginatorInterface $paginator, SerializerInterface $serializer, CacheInterface $cache)
+    public function listClient(Request $request)
     {
-        $clients = $clientRepository->findAll();
         $CurrentPage = $request->get('page', 1);
         $PageItemsLimit =  $request->get('item', 5);
-        $fullProductsCount = count($clients);
-        // $fullProductsCount = '25';
-        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
-        $clients = $paginator->paginate($clients, $request->get('page', 1), $PageItemsLimit);
 
+        $query = $this->cache->get('Clients_list', function (ItemInterface $item) {
+            $item->expiresAfter(10);
+            return  $this->repo->findAll();
+        });
+        
+        $fullProductsCount = $this->cache->get('count', function (ItemInterface $item) use ($query) {
+            $item->expiresAfter(10);
+            $list = count($query);
+            return  $list;
+        });
+        
+        $clients = $this->paginate->paginate($query, $CurrentPage, $PageItemsLimit);
+        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
         $content = [
             'meta' => [
                 'Totalclients' => $fullProductsCount,
                 'maxclientsPerPage(item)' => $PageItemsLimit,
                 'currentPage(page)' => $CurrentPage,
                 'lastPage' => $lastPage
-                
-            ],
+             ],
             'data' => $clients
         ];
-        $data = $serializer->serialize($content, 'json', ['groups' => 'Full']);
+        $data = $this->serializer->serialize($content, 'json', ['groups' => 'Full']);
+
+
+
+
+        
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
 
 
@@ -100,7 +123,7 @@ class ClientController extends AbstractController
     * @OA\Tag(name="Client")
         * @Security(name="Bearer")
      */
-    public function show($id, SerializerInterface $serializer, EntityManagerInterface $entityManager)
+    public function show($id, EntityManagerInterface $entityManager)
     {
         $client = $entityManager->getRepository(Client::class)->find($id);
         if (!$client) {
@@ -113,7 +136,7 @@ class ClientController extends AbstractController
 
         $id = $client->getId();
         $client = $entityManager->getRepository(Client::class)->findOneBy(['id' => $id]);
-        $data = $serializer->serialize($client, 'json', ['groups' => 'detail']);
+        $data = $this->serializer->serialize($client, 'json', ['groups' => 'detail']);
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 }
