@@ -40,7 +40,7 @@ class PhoneController extends AbstractController
     {
         $phones = $phoneRepository->findAll();
         $CurrentPage = $request->get('page', 1);
-        $PageItemsLimit = 5;
+        $PageItemsLimit =  $request->get('item', 5);
         $fullProductsCount = count($phones);
         // $fullProductsCount = '25';
         $lastPage = ceil($fullProductsCount / $PageItemsLimit);
@@ -49,9 +49,10 @@ class PhoneController extends AbstractController
         $content = [
             'meta' => [
                 'TotalPhones' => $fullProductsCount,
-                'maxItemsPerPage' => $PageItemsLimit,
-                'lastPage' => $lastPage,
-                'currentPage' => $CurrentPage
+                'maxPhonesPerPage(item)' => $PageItemsLimit,
+                'currentPage(page)' => $CurrentPage,
+                'lastPage' => $lastPage
+                
             ],
             'data' => $phones
         ];
