@@ -61,7 +61,7 @@ class PhoneController extends AbstractController
     }
 
     /**
-    * @OA\Get(path="/api/phone/{id}")
+    * @OA\Get(path="/api/phone/{id<\d+>}")
     * @Route("/api/phone/{id}", name="api_phone", methods={"GET"})
     * @OA\Response(
      *     response=200,
@@ -76,13 +76,13 @@ class PhoneController extends AbstractController
     * @OA\Tag(name="Phones")
     * @Security(name="Bearer")
      */
-    public function show($id, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+    public function show(int $id, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
     {
         $phone = $entityManager->getRepository(Phone::class)->find($id);
         if (!$phone) {
             $data= [
             'status' => 404,
-            'message' => 'Phone not found'
+            'message' => 'PhoneID not found'
         ];
             return $this->json($data, 404);
         }

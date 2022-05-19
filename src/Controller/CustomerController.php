@@ -77,7 +77,7 @@ class CustomerController extends AbstractController
 
     
     /**
-    * @Route("/api/customer/{id}", name="api_customer", methods={"GET"})
+    * @Route("/api/customer/{id<\d+>}", name="api_customer", methods={"GET"})
     * @OA\Get(path="/api/customer/{id}")
     * @OA\Response(
      *     response=200,
@@ -98,7 +98,7 @@ class CustomerController extends AbstractController
         if (!$customer) {
             $data= [
             'status' => 404,
-            'message' => 'Customer not found'
+            'message' => 'CustomerID not found'
         ];
             return $this->json($data, 404);
         }
