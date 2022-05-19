@@ -24,12 +24,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CustomerController extends AbstractController
 {
-    private $serializer;
 
-    public function __construct(SerializerInterface $serializer)
-    {
-        $this->serializer = $serializer;
-    }
     /**
     * @OA\Get(path="/api/customers")
     * @Route("/api/customers", name="api_customers", methods={"GET"})
@@ -46,15 +41,30 @@ class CustomerController extends AbstractController
     * @OA\Tag(name="Customer")
     * @Security(name="Bearer")
     */
-    public function ListCustumerClient(CustomerRepository $customerRepository, Request $request, PaginatorInterface $paginator, CacheInterface $cache)
+    public function ListCustumerClient(CustomerRepository $customerRepository, SerializerInterface $serializer, Request $request, PaginatorInterface $paginator, CacheInterface $cache)
     {
         $client = $this->getUser();
-        $id = $client->getId();
-        $customers = $customerRepository->findBy(array('client'=>$id));
-        $customersPaginate = $paginator->paginate($customers, $request->get('page', 1), 5);
-        $page =  $request->query->getInt('page', 1);
-          
-        $data = $this->serializer->serialize($customersPaginate, 'json', ['groups' => 'Full']);
+        $customers = $customerRepository->findAll();
+        $CurrentPage = $request->get('page', 1);
+        $PageItemsLimit =  $request->get('item', 5);
+        $fullProductsCount = count($customers);
+        // $fullProductsCount = '25';
+        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
+        $customers = $paginator->paginate($customers, $request->get('page', 1), $PageItemsLimit);
+
+        $content = [
+            'meta' => [
+                'Totalcustomers' => $fullProductsCount,
+                'maxcustomerstPerPage(item)' => $PageItemsLimit,
+                'currentPage(page)' => $CurrentPage,
+                'lastPage' => $lastPage
+                
+            ],
+            'data' => $customers
+        ];
+        $data = $serializer->serialize($content, 'json', ['groups' => 'Full']);
+        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+
 
         // $result = $cache->get('customers', function (ItemInterface $item) use ($data, $customers) {
         //     $item->expiresAfter(3600);

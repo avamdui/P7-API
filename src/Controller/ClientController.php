@@ -20,12 +20,6 @@ use Knp\Component\Pager\PaginatorInterface;
 
 class ClientController extends AbstractController
 {
-    private $serializer;
-
-    public function __construct(SerializerInterface $serializer)
-    {
-        $this->serializer = $serializer;
-    }
     /**
      * @OA\Post(path="/api/login_check")
     * @OA\Response(
@@ -58,17 +52,35 @@ class ClientController extends AbstractController
     * @OA\Tag(name="Client")
     * @Security(name="Bearer")
      */
-    public function listClient(ClientRepository $clientRepository, Request $request, PaginatorInterface $paginator, CacheInterface $cache)
+    public function listClient(ClientRepository $clientRepository, Request $request, PaginatorInterface $paginator, SerializerInterface $serializer, CacheInterface $cache)
     {
         $clients = $clientRepository->findAll();
-        $clients = $paginator->paginate($clients, $request->get('page', 1), 5);
-        $data = $this->serializer->serialize($clients, 'json', ['groups' => 'Full']);
+        $CurrentPage = $request->get('page', 1);
+        $PageItemsLimit =  $request->get('item', 5);
+        $fullProductsCount = count($clients);
+        // $fullProductsCount = '25';
+        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
+        $clients = $paginator->paginate($clients, $request->get('page', 1), $PageItemsLimit);
 
-        $result = $cache->get('clients', function (ItemInterface $item) use ($data, $clients) {
-            $item->expiresAfter(3600);
-            return new JsonResponse($data, JsonResponse::HTTP_OK, ["test"], true);
-        });
-        return $result;
+        $content = [
+            'meta' => [
+                'Totalclients' => $fullProductsCount,
+                'maxclientsPerPage(item)' => $PageItemsLimit,
+                'currentPage(page)' => $CurrentPage,
+                'lastPage' => $lastPage
+                
+            ],
+            'data' => $clients
+        ];
+        $data = $serializer->serialize($content, 'json', ['groups' => 'Full']);
+        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+
+
+        // $result = $cache->get('clients', function (ItemInterface $item) use ($data, $clients) {
+        //     $item->expiresAfter(3600);
+        //     return new JsonResponse($data, JsonResponse::HTTP_OK, ["test"], true);
+        // });
+        // return $result;
     }
 
 
