@@ -63,7 +63,7 @@ class CustomerController extends AbstractController
             'data' => $customers
         ];
         $data = $serializer->serialize($content, 'json', ['groups' => 'Full']);
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+        return new JsonResponse($data, '200', [], true);
 
 
         // $result = $cache->get('customers', function (ItemInterface $item) use ($data, $customers) {
@@ -72,7 +72,7 @@ class CustomerController extends AbstractController
         // });
         // return $result;
 
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+        return new JsonResponse($data, '200', [], true);
     }
 
     

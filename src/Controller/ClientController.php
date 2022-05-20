@@ -90,12 +90,9 @@ class ClientController extends AbstractController
              ],
             'data' => $clients
         ];
-
-        $data = $this->cache->get('data', function (ItemInterface $item) use ($content) {
-            $item->expiresAfter(10);
-            return $this->serializer->serialize($content, 'json', ['groups' => 'Full']);
-        });
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+        // dd($content); -->OK
+        $data =  $this->serializer->serialize($content, 'json', ['groups' => 'Full']);
+        return new JsonResponse($data, '200', [], true);
     }
 
 
