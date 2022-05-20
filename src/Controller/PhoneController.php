@@ -20,6 +20,17 @@ use Knp\Component\Pager\PaginatorInterface;
 
 class PhoneController extends AbstractController
 {
+    private $repo;
+    private $cache;
+    private $paginate;
+    private $serializer;
+    public function __construct(PhoneRepository $PhoneRepository, PaginatorInterface $paginator, CacheInterface $cache, SerializerInterface $serializer)
+    {
+        $this->repo = $PhoneRepository;
+        $this->paginate = $paginator;
+        $this->cache = $cache;
+        $this->serializer = $serializer;
+    }
     /**
     * @OA\Get(path="/api/phones")
     * @Route("/api/phones", name="api_phones", methods={"GET"})
@@ -36,29 +47,38 @@ class PhoneController extends AbstractController
     * @OA\Tag(name="Phones")
     * @Security(name="Bearer")
      */
-    public function list(PhoneRepository $phoneRepository, SerializerInterface $serializer, Request $request, PaginatorInterface $paginator): Response
+    public function list(Request $request): Response
     {
-        $phones = $phoneRepository->findAll();
         $CurrentPage = $request->get('page', 1);
         $PageItemsLimit =  $request->get('item', 5);
-        $fullProductsCount = count($phones);
-        // $fullProductsCount = '25';
-        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
-        $phones = $paginator->paginate($phones, $request->get('page', 1), $PageItemsLimit);
 
+        $query = $this->cache->get('Phones_list', function (ItemInterface $item) {
+            $item->expiresAfter(10);
+            return  $this->repo->findAll();
+        });
+        
+        $fullProductsCount = $this->cache->get('count', function (ItemInterface $item) use ($query) {
+            $item->expiresAfter(10);
+            $list = count($query);
+            return  $list;
+        });
+        
+        $Phones = $this->paginate->paginate($query, $CurrentPage, $PageItemsLimit);
+        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
         $content = [
             'meta' => [
                 'TotalPhones' => $fullProductsCount,
                 'maxPhonesPerPage(item)' => $PageItemsLimit,
                 'currentPage(page)' => $CurrentPage,
                 'lastPage' => $lastPage
-                
-            ],
-            'data' => $phones
+             ],
+            'data' => $Phones
         ];
-        $data = $serializer->serialize($content, 'json', ['groups' => 'Full']);
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+
+        $data =  $this->serializer->serialize($content, 'json', ['groups' => 'Full']);
+        return new JsonResponse($data, '200', [], true);
     }
+
 
     /**
     * @OA\Get(path="/api/phone/{id<\d+>}")
@@ -76,7 +96,7 @@ class PhoneController extends AbstractController
     * @OA\Tag(name="Phones")
     * @Security(name="Bearer")
      */
-    public function show(int $id, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+    public function show(int $id, EntityManagerInterface $entityManager): JsonResponse
     {
         $phone = $entityManager->getRepository(Phone::class)->find($id);
         if (!$phone) {
@@ -89,7 +109,7 @@ class PhoneController extends AbstractController
        
         $id = $phone->getId();
         $phone = $entityManager->getRepository(Phone::class)->findOneBy(['id' => $id]);
-        $data = $serializer->serialize($phone, 'json', ['groups' => 'detail']);
+        $data = $this->serializer->serialize($phone, 'json', ['groups' => 'detail']);
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 }

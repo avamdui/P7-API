@@ -24,6 +24,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CustomerController extends AbstractController
 {
+    private $repo;
+    private $cache;
+    private $paginate;
+    private $serializer;
+    public function __construct(CustomerRepository $CustomerRepository, PaginatorInterface $paginator, CacheInterface $cache, SerializerInterface $serializer)
+    {
+        $this->repo = $CustomerRepository;
+        $this->paginate = $paginator;
+        $this->cache = $cache;
+        $this->serializer = $serializer;
+    }
 
     /**
     * @OA\Get(path="/api/customers")
@@ -44,34 +55,33 @@ class CustomerController extends AbstractController
     public function ListCustumerClient(CustomerRepository $customerRepository, SerializerInterface $serializer, Request $request, PaginatorInterface $paginator, CacheInterface $cache)
     {
         $client = $this->getUser();
-        $customers = $customerRepository->findAll();
         $CurrentPage = $request->get('page', 1);
         $PageItemsLimit =  $request->get('item', 5);
-        $fullProductsCount = count($customers);
-        // $fullProductsCount = '25';
-        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
-        $customers = $paginator->paginate($customers, $CurrentPage, $PageItemsLimit);
 
+        $query = $this->cache->get('Customers_list', function (ItemInterface $item) {
+            $item->expiresAfter(10);
+            return  $this->repo->findAll();
+        });
+        
+        $fullProductsCount = $this->cache->get('count', function (ItemInterface $item) use ($query) {
+            $item->expiresAfter(10);
+            $list = count($query);
+            return  $list;
+        });
+        
+        $customers = $this->paginate->paginate($query, $CurrentPage, $PageItemsLimit);
+        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
         $content = [
             'meta' => [
-                'Totalcustomers' => $fullProductsCount,
-                'maxcustomerstPerPage(item)' => $PageItemsLimit,
+                'TotalCustomers' => $fullProductsCount,
+                'maxCustomersPerPage(item)' => $PageItemsLimit,
                 'currentPage(page)' => $CurrentPage,
                 'lastPage' => $lastPage
-                
-            ],
+             ],
             'data' => $customers
         ];
-        $data = $serializer->serialize($content, 'json', ['groups' => 'Full']);
-        return new JsonResponse($data, '200', [], true);
 
-
-        // $result = $cache->get('customers', function (ItemInterface $item) use ($data, $customers) {
-        //     $item->expiresAfter(3600);
-        //     return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
-        // });
-        // return $result;
-
+        $data =  $this->serializer->serialize($content, 'json', ['groups' => 'Full']);
         return new JsonResponse($data, '200', [], true);
     }
 
@@ -92,7 +102,7 @@ class CustomerController extends AbstractController
     * @OA\Tag(name="Customer")
     * @Security(name="Bearer")
      */
-    public function show($id, SerializerInterface $serializer, EntityManagerInterface $entityManager)
+    public function show($id, EntityManagerInterface $entityManager)
     {
         $customer = $entityManager->getRepository(Customer::class)->find($id);
         if (!$customer) {
@@ -105,7 +115,7 @@ class CustomerController extends AbstractController
 
         $id = $customer->getId();
         $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $id]);
-        $data = $serializer->serialize($customer, 'json', ['groups' => 'detail']);
+        $data = $this->serializer->serialize($customer, 'json', ['groups' => 'detail']);
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
@@ -127,11 +137,11 @@ class CustomerController extends AbstractController
     * @Security(name="Bearer")
 
      */
-    public function create(Request $request, EntityManagerInterface $em, SerializerInterface $serializer, ValidatorInterface $validator) : JsonResponse
+    public function create(Request $request, EntityManagerInterface $em, ValidatorInterface $validator) : JsonResponse
     {
         try {
             $customer = $request->getContent();
-            $customer = $serializer->deserialize($customer, Customer::class, 'json');
+            $customer = $this->serializer->deserialize($customer, Customer::class, 'json');
             $customer->setCreatedAt(new DateTime())
                      ->setClient($this->getUser());
             $error = $validator->validate($customer);
@@ -141,7 +151,7 @@ class CustomerController extends AbstractController
             }
             $em->persist($customer);
             $em->flush();
-            $data = $serializer->serialize($customer, 'json', ['groups' => 'detail']);
+            $data = $this->serializer->serialize($customer, 'json', ['groups' => 'detail']);
             return new JsonResponse($data, Response::HTTP_CREATED, [], true);
         } catch (NotEncodableValueException $e) {
             return $this->json(array('status'=>400, 'message'=>$e->getMessage()), 400);
