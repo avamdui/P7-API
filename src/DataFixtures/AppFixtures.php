@@ -11,7 +11,6 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
-
 {
     private $passwordEncoder;
 
@@ -81,12 +80,12 @@ class AppFixtures extends Fixture
         // ============Users===============
         //===============================//
 
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 50; $i++) {
             $customer = new Customer();
             $customer->setFirstname($faker->firstName());
             $customer->setLastname($faker->lastName());
             $customer->setEmail($faker->safeEmail());
-            $customer->setPhoneNumber($faker->randomNumber($nbDigits = 10, $strict = true));
+            $customer->setPhoneNumber($faker->mobileNumber());
             $customer->setPassword('Password');
             $customer->setClient($faker->randomElement($clients));
             $customer->setCreatedAt($faker->dateTimeBetween($startDate = '-8 months', $endDate = 'now', $timezone = null));
@@ -96,6 +95,35 @@ class AppFixtures extends Fixture
         // ================================
         // ==========Phone===========
         //===============================//
+        $phone = new Phone();
+        $phone->setModelName("Pixel 4 ")
+            ->setRef($faker->randomNumber())
+            ->setStock($faker->randomDigit())
+            ->setBrand("Google")
+            ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
+            ->setCreatedAt($faker->dateTimeBetween($startDate = "-6 months", $endDate = "now", $timezone = null))
+            ->setPrice(789.89);
+        $manager->persist($phone);
+
+        $phone = new Phone();
+        $phone->setModelName("Pixel 5")
+            ->setRef($faker->randomNumber())
+            ->setStock($faker->randomDigit())
+            ->setBrand("Google")
+            ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
+            ->setCreatedAt($faker->dateTimeBetween($startDate = "-6 months", $endDate = "now", $timezone = null))
+            ->setPrice(989.89);
+        $manager->persist($phone);
+
+        $phone = new Phone();
+        $phone->setModelName("Pixel 6 Pro")
+            ->setRef($faker->randomNumber())
+            ->setStock($faker->randomDigit())
+            ->setBrand("Google")
+            ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
+            ->setCreatedAt($faker->dateTimeBetween($startDate = "-6 months", $endDate = "now", $timezone = null))
+            ->setPrice(1189.89);
+        $manager->persist($phone);
 
         $phone = new Phone();
         $phone->setModelName("Iphone 12")
@@ -104,7 +132,7 @@ class AppFixtures extends Fixture
             ->setBrand("Apple")
             ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
             ->setCreatedAt($faker->dateTimeBetween($startDate = "-6 months", $endDate = "now", $timezone = null))
-            ->setPrice(1289.89);
+            ->setPrice(1089.89);
         $manager->persist($phone);
 
         $phone = new Phone();
@@ -115,6 +143,16 @@ class AppFixtures extends Fixture
             ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
             ->setCreatedAt($faker->dateTimeBetween($startDate = "-3 months", $endDate = "now", $timezone = null))
             ->setPrice(1444.99);
+        $manager->persist($phone);
+
+        $phone = new Phone();
+        $phone->setModelName("Iphone 11")
+            ->setRef($faker->randomNumber())
+            ->setStock($faker->randomDigit())
+            ->setBrand("Apple")
+            ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
+            ->setCreatedAt($faker->dateTimeBetween($startDate = "-3 months", $endDate = "now", $timezone = null))
+            ->setPrice(844.99);
         $manager->persist($phone);
 
         $phone = new Phone();
@@ -135,6 +173,26 @@ class AppFixtures extends Fixture
             ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
             ->setCreatedAt($faker->dateTimeBetween($startDate = "-6 months", $endDate = "now", $timezone = null))
             ->setPrice(989.89);
+        $manager->persist($phone);
+
+        $phone = new Phone();
+        $phone->setModelName("Galaxy S21")
+            ->setRef($faker->randomNumber())
+            ->setStock($faker->randomDigit())
+            ->setBrand("Samsung")
+            ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
+            ->setCreatedAt($faker->dateTimeBetween($startDate = "-6 months", $endDate = "now", $timezone = null))
+            ->setPrice(889.89);
+        $manager->persist($phone);
+
+        $phone = new Phone();
+        $phone->setModelName("Galaxy S20")
+            ->setRef($faker->randomNumber())
+            ->setStock($faker->randomDigit())
+            ->setBrand("Samsung")
+            ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
+            ->setCreatedAt($faker->dateTimeBetween($startDate = "-6 months", $endDate = "now", $timezone = null))
+            ->setPrice(789.89);
         $manager->persist($phone);
 
         $phone = new Phone();
@@ -167,6 +225,17 @@ class AppFixtures extends Fixture
             ->setPrice(349.00);
         $manager->persist($phone);
 
+        
+        $phone = new Phone();
+        $phone->setModelName("3310")
+            ->setRef($faker->randomNumber())
+            ->setStock($faker->randomDigit())
+            ->setBrand("Nokia")
+            ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
+            ->setCreatedAt($faker->dateTimeBetween($startDate = "-3 months", $endDate = "now", $timezone = null))
+            ->setPrice(149.00);
+        $manager->persist($phone);
+
         $phone = new Phone();
         $phone->setModelName("P40 Pro")
             ->setRef($faker->randomNumber())
@@ -175,6 +244,28 @@ class AppFixtures extends Fixture
             ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
             ->setCreatedAt($faker->dateTimeBetween($startDate = "-2 months", $endDate = "now", $timezone = null))
             ->setPrice(949.00);
+        $manager->persist($phone);
+
+        
+        $phone = new Phone();
+        $phone->setModelName("P30 Pro")
+            ->setRef($faker->randomNumber())
+            ->setStock($faker->randomDigit())
+            ->setBrand("Huawei")
+            ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
+            ->setCreatedAt($faker->dateTimeBetween($startDate = "-2 months", $endDate = "now", $timezone = null))
+            ->setPrice(749.00);
+        $manager->persist($phone);
+
+        
+        $phone = new Phone();
+        $phone->setModelName("P20 Pro")
+            ->setRef($faker->randomNumber())
+            ->setStock($faker->randomDigit())
+            ->setBrand("Huawei")
+            ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
+            ->setCreatedAt($faker->dateTimeBetween($startDate = "-2 months", $endDate = "now", $timezone = null))
+            ->setPrice(549.00);
         $manager->persist($phone);
 
         $phone = new Phone();
@@ -186,7 +277,6 @@ class AppFixtures extends Fixture
             ->setCreatedAt($faker->dateTimeBetween($startDate = "-2 months", $endDate = "now", $timezone = null))
             ->setPrice(1242.00);
         $manager->persist($phone);
-
 
 
         $manager->flush();

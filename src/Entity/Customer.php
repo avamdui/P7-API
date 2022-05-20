@@ -50,9 +50,9 @@ class Customer
     private $lastname;
 
     /**
-     * @Assert\NotBlank
-       * @Assert\Unique
-    * @ORM\Column(type="string", length=10)
+    * @Assert\NotBlank
+    * @Assert\Unique
+    * @ORM\Column(type="string", length=25)
     * @groups({"Full", "detail", "create"})
     * @OA\Property(example="0607080910")
     */
