@@ -83,10 +83,10 @@ class ClientController extends AbstractController
         $lastPage = ceil($fullProductsCount / $PageItemsLimit);
         $content = [
             'meta' => [
-                'Totalclients' => $fullProductsCount,
-                'maxclientsPerPage(item)' => $PageItemsLimit,
-                'currentPage(page)' => $CurrentPage,
-                'lastPage' => $lastPage
+                'Total clients' => $fullProductsCount,
+                'Clients per page (item)' => $PageItemsLimit,
+                'Current page (page)' => $CurrentPage,
+                'Last Page' => $lastPage
              ],
             'data' => $clients
         ];

@@ -67,10 +67,10 @@ class PhoneController extends AbstractController
         $lastPage = ceil($fullProductsCount / $PageItemsLimit);
         $content = [
             'meta' => [
-                'TotalPhones' => $fullProductsCount,
-                'maxPhonesPerPage(item)' => $PageItemsLimit,
-                'currentPage(page)' => $CurrentPage,
-                'lastPage' => $lastPage
+                'Total phones' => $fullProductsCount,
+                'Phones per page (item)' => $PageItemsLimit,
+                'Current page (page)' => $CurrentPage,
+                'Last Page' => $lastPage
              ],
             'data' => $Phones
         ];
