@@ -35,8 +35,9 @@ class Customer
     private $client;
 
     /**
-    * @Assert\NotBlank
     * @ORM\Column(type="string", length=255)
+    * @Assert\NotBlank(message="The value should not be blank")
+    * @Assert\Type(type="string", message="The value should be a string")
     * @groups({"Full", "detail", "create"})
     * @OA\Property(example="Alex")
     */
@@ -51,7 +52,6 @@ class Customer
 
     /**
     * @Assert\NotBlank
-    * @Assert\Unique
     * @ORM\Column(type="string", length=25)
     * @groups({"Full", "detail", "create"})
     * @OA\Property(example="0607080910")
@@ -60,7 +60,7 @@ class Customer
 
     /**
     * @Assert\NotBlank
-    * @Assert\Unique
+
     * @ORM\Column(type="string", length=255)
     * @OA\Property(example="Alex.duchien@voila.fr")
     * @groups({"Full", "detail", "create"})

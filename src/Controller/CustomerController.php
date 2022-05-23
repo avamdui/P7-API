@@ -134,6 +134,7 @@ class CustomerController extends AbstractController
     * @OA\Response(response=404, description="Not found" ),
     * @OA\Response(response=400, description="Bad Request"))
     * @OA\Tag(name="Customer")
+
     * @Security(name="Bearer")
 
      */
