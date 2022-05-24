@@ -39,7 +39,7 @@ class CustomerController extends AbstractController
     }
 
     /**
-    * @Groups({"Full"})
+    * @Groups({"list"})
     * @OA\Get(path="/api/customers")
     * @Route("/api/customers", name="api_customers", methods={"GET"})
     * @OA\Response(
@@ -47,7 +47,7 @@ class CustomerController extends AbstractController
      *     description="Returns the Customer's client'",
      *     @OA\JsonContent(
      *        type="array",
-     *        @OA\Items(ref=@Model(type=Customer::class, groups={"Full"}))
+     *        @OA\Items(ref=@Model(type=Customer::class, groups={"list"}))
      *     )
      * )
     * @OA\Response(response=404, description="ressource not found" ),
@@ -65,26 +65,33 @@ class CustomerController extends AbstractController
             $item->expiresAfter(10);
             return  $this->repo->findAll();
         });
+      
         
-        $fullProductsCount = $this->cache->get('count', function (ItemInterface $item) use ($query) {
-            $item->expiresAfter(10);
-            $list = count($query);
-            return  $list;
-        });
+        // $fullProductsCount = $this->cache->get('count', function (ItemInterface $item) use ($query) {
+        //     $item->expiresAfter(10);
+        //     $list = count($query);
+        //     return  $list;
+        // });
         
-        $customers = $this->paginate->paginate($query, $CurrentPage, $PageItemsLimit);
-        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
-        $content = [
-            'meta' => [
-                'Total customers' => $fullProductsCount,
-                'Customers per page (item)' => $PageItemsLimit,
-                'Current page (page)' => $CurrentPage,
-                'Last Page' => $lastPage
-             ],
-            'data' => $customers
-        ];
+        $customers = $this->paginate->paginate($query, $CurrentPage, $PageItemsLimit)->getItems();
+      
+        // $lastPage = ceil($fullProductsCount / $PageItemsLimit);
+        // $content = [
+        //     'meta' => [
+        //         'Total customers' => $fullProductsCount,
+        //         'Customers per page (item)' => $PageItemsLimit,
+        //         'Current page (page)' => $CurrentPage,
+        //         'Last Page' => $lastPage
+        //      ],
+        //     'data' => $customers
+        // ];
+        $context = new SerializationContext;
+        $context->create()->setGroups(['list']);
+        $context->enableMaxDepthChecks(true);
 
-        $data =  $this->serializer->serialize($content, 'json', SerializationContext::create()->setGroups(array('full')));
+
+        $data =  $this->serializer->serialize($customers, 'json', $context);
+    
         return new JsonResponse($data, '200', [], true);
     }
 

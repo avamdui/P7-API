@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "api_customers",
  *          absolute = true
  *      ),
- *        exclusion = @Hateoas\Exclusion({"full"})
+ *        exclusion = @Hateoas\Exclusion({"detail"})
  * )
   * @Hateoas\Relation(
  *      "listAll",
@@ -50,7 +50,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "api_customer_create",
  *         absolute=true
  *     ),
- *        exclusion = @Hateoas\Exclusion({"full", "detail"})
+ *        exclusion = @Hateoas\Exclusion({"detail"})
 
  * )
  * @Hateoas\Relation(
@@ -60,7 +60,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          parameters = { "id" = "expr(object.getId())" },
  *          absolute = true
  *      ),
- *        exclusion = @Hateoas\Exclusion({"full", "detail"})
+ *        exclusion = @Hateoas\Exclusion({ "detail"})
  * )
   * @Hateoas\Relation(
  *     "Client",
@@ -75,7 +75,7 @@ class Customer
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "detail"})
+     * @Groups({"list", "detail"})
      * @OA\Property(example="251", description="The unique identifier of the user.")
      *
      */
@@ -83,8 +83,8 @@ class Customer
 
     /**
     * @Assert\NotBlank
+    * @Groups({"none"})
     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="customers")
-    * @Groups({"detail"})
     */
     private $client;
 
@@ -92,7 +92,7 @@ class Customer
     * @ORM\Column(type="string", length=255)
     * @Assert\NotBlank(message="The value should not be blank")
     * @Assert\Type(type="string", message="The value should be a string")
-    * @Groups({"full", "detail", "create"})
+    * @Groups({"list", "detail", "create"})
     * @OA\Property(example="Alex")
     */
     private $firstname;
@@ -100,14 +100,14 @@ class Customer
     /**
      * @Assert\NotBlank
     * @ORM\Column(type="string", length=255)
-    * @Groups({"full", "detail", "create"})
+    * @Groups({"list", "detail", "create"})
     */
     private $lastname;
 
     /**
     * @Assert\NotBlank
     * @ORM\Column(type="string", length=25)
-    * @Groups({"full", "detail", "create"})
+    * @Groups({"list", "detail", "create"})
     * @OA\Property(example="0607080910")
     */
     private $phoneNumber;
@@ -117,21 +117,21 @@ class Customer
 
     * @ORM\Column(type="string", length=255)
     * @OA\Property(example="Alex.duchien@voila.fr")
-    * @Groups({"full", "detail", "create"})
+    * @Groups({"list", "detail", "create"})
     */
     private $email;
 
     /**
      * @Assert\NotBlank
     * @ORM\Column(type="string", length=255)
-    * @Groups({"full", "detail", "create"})
+    * @Groups({"list", "detail", "create"})
     */
     private $password;
 
     /**
      * @Assert\NotBlank
     * @ORM\Column(type="datetime")
-    * @Groups({"full", "detail"})
+    * @Groups({"detail"})
     */
     private $createdAt;
 
