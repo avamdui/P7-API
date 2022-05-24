@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use App\Entity\Client;
@@ -11,7 +14,6 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,9 +27,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CustomerController extends AbstractController
 {
     private $repo;
-    private $cache;
+    private CacheInterface $cache;
     private $paginate;
-    private $serializer;
+    private SerializerInterface $serializer;
     public function __construct(CustomerRepository $CustomerRepository, PaginatorInterface $paginator, CacheInterface $cache, SerializerInterface $serializer)
     {
         $this->repo = $CustomerRepository;
@@ -37,6 +39,7 @@ class CustomerController extends AbstractController
     }
 
     /**
+    * @Groups({"Full"})
     * @OA\Get(path="/api/customers")
     * @Route("/api/customers", name="api_customers", methods={"GET"})
     * @OA\Response(
@@ -52,7 +55,7 @@ class CustomerController extends AbstractController
     * @OA\Tag(name="Customer")
     * @Security(name="Bearer")
     */
-    public function ListCustumerClient(CustomerRepository $customerRepository, SerializerInterface $serializer, Request $request, PaginatorInterface $paginator, CacheInterface $cache)
+    public function ListCustumerClient(Request $request)
     {
         $client = $this->getUser();
         $CurrentPage = $request->get('page', 1);
@@ -81,7 +84,7 @@ class CustomerController extends AbstractController
             'data' => $customers
         ];
 
-        $data =  $this->serializer->serialize($content, 'json', ['groups' => 'Full']);
+        $data =  $this->serializer->serialize($content, 'json', SerializationContext::create()->setGroups(array('full')));
         return new JsonResponse($data, '200', [], true);
     }
 
@@ -112,11 +115,11 @@ class CustomerController extends AbstractController
         ];
             return $this->json($data, 404);
         }
-
+        
         $id = $customer->getId();
         $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $id]);
-        $data = $this->serializer->serialize($customer, 'json', ['groups' => 'detail']);
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+        $data = $this->serializer->serialize($customer, 'json', SerializationContext::create()->setGroups(array('detail')));
+        return new JsonResponse($data, 200, [], true);
     }
 
     /**
@@ -152,13 +155,11 @@ class CustomerController extends AbstractController
             }
             $em->persist($customer);
             $em->flush();
-            $data = $this->serializer->serialize($customer, 'json', ['groups' => 'detail']);
+            $data = $this->serializer->serialize($customer, 'json', SerializationContext::create()->setGroups(array('detail')));
             return new JsonResponse($data, Response::HTTP_CREATED, [], true);
         } catch (NotEncodableValueException $e) {
             return $this->json(array('status'=>400, 'message'=>$e->getMessage()), 400);
         }
-
-        // return $this->json(['result' => 'Customer created']);
     }
 
     /**

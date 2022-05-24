@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Hateoas\Configuration\Annotation as Hateoas;
 use OpenApi\Annotations as OA;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -17,6 +18,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(
  *  fields={"ref"},
  *  message="Référence déjà utilisé"
+ * )
+ *
+ * @Hateoas\Relation(
+ *      "self",
+ *      href = @Hateoas\Route(
+ *          "api_phone",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true,
+ *      )
  * )
  */
 class Phone

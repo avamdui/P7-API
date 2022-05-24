@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Hateoas\Configuration\Annotation as Hateoas;
 use OpenApi\Annotations as OA;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -13,6 +14,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ *
  * @ORM\Table(name="`client`")
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
  * @UniqueEntity(
@@ -64,7 +66,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+    * @ORM\Column(type="string", length=255)
     * @groups({"Full", "detail"})
      */
     private $company;
