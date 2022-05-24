@@ -26,8 +26,69 @@ Vous avez le choix entre mettre en place un serveur OAuth et y faire appel (en u
 # Présentation des données
 Le premier partenaire de BileMo est très exigeant : il requiert que vous exposiez vos données en suivant les règles des niveaux 1, 2 et 3 du modèle de Richardson. Il a demandé à ce que vous serviez les données en JSON. Si possible, le client souhaite que les réponses soient mises en cache afin d’optimiser les performances des requêtes en direction de l’API.
 
+## Installation
+
+### Prerequisites
+
+Installer GitHub (<https://gist.github.com/derhuerst/1b15ff4652a867391f03>) \
+Installer Composer (<https://getcomposer.org>) \
+Installer  Postman  (<https://postman.com/downloads>)
+
+Nécéssite PHP 8 et Symfony 6 
+
+
+### Download
+
+```shell
+git clone https://github.com/avamdui/P7-API.git
+```
+
+Installez les dépendances en exécutant la commande suivante :
+
+```shell
+composer install
+```
+
+### Base de donnée et configuration de (JSON Web Token)) 
+
+Générez les clés SSH avec votre propre phrase secrète :
+
+```shell
+$ mkdir -p config/jwt
+$ openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
+$ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
+```
+
+ Personnaliser le fichier .env en renseignant "DATABASE_URL" et "MAILER_DSN"  et Renseigner les Clés Public et Private dans les dossiers 
+ %kernel.project_dir%/config/jwt/private.pem
+ %kernel.project_dir%/config/jwt/public.pem
+
+```shell
+DATABASE_URL="URL DE VOTRE BASE DE DONNEE"
+JWT_PASSPHRASE=#your passphrase
+```
+
+Creation de la BDD :
+
+```shell
+php bin/console doctrine:database:create
+```
+
+Créez les différentes tables de la base de données en appliquant les migrations
+
+```shell
+php bin/console doctrine:migrations:migrate
+```
+
+Installer les fixtures pour avoir une démo de données fictives :
+
+```shell
+php bin/console doctrine:fixtures:load
+```
+###
+Pour obtenir un Token, utiliser la méthode POST sur l'url 
+http://localhost/api/login_check
 {
-    "username": "avamdui",
-    "password": "Test007"
+    "username": "BilemoAdmin",
+    "password": "Admin1"
 }
-{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTA5ODAxMDQsImV4cCI6MTY1NDU4MDEwNCwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImF2YW1kdWkifQ.lb_vGTFVfl8NuhIVoHtyGnoZ9uUjNkO8u-F57aZZCW4TmzYn39Hoo76Dx6Fq5t6xGyggkUym5HJxImcuEhx9OZ4vg2-i9AP6oBnmkCtcrMl0gr94btB0kIY5GEbIY1FR46CFvEUyX50Uq5aVaFP9hl6iIK_BSoDxeeq4SDlOHMTK8rQ-GMqlSCNGqWWwyMiReap1A_zdOyZVcR9fFEQycV_BiJxJQRZEKaYD77QODkQtKogjnnxgM8w1RoVjBBaUqrQJ_8tU2TFRyBjUaGKF38o6lTK_juKDx4Bbk3TJEQLt3sJL_R7i-HjH_lP9_ml1KRo1l5La_h7ydKf2LcIN3g"}
