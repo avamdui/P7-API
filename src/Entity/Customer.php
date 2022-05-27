@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use JMS\Serializer\Annotation\Groups;
 use Hateoas\Configuration\Annotation as Hateoas;
-use JMS\Serializer\Annotation as Serializer;
 use OpenApi\Annotations as OA;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
