@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -12,6 +14,8 @@ use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Hateoas\Representation\Factory\PagerfantaFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use OpenApi\Annotations as OA;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -28,12 +31,11 @@ class CustomerController extends AbstractController
 {
     private $repo;
     private CacheInterface $cache;
-    private $paginate;
+
     private SerializerInterface $serializer;
-    public function __construct(CustomerRepository $CustomerRepository, PaginatorInterface $paginator, CacheInterface $cache, SerializerInterface $serializer)
+    public function __construct(CustomerRepository $CustomerRepository, CacheInterface $cache, SerializerInterface $serializer)
     {
         $this->repo = $CustomerRepository;
-        $this->paginate = $paginator;
         $this->cache = $cache;
         $this->serializer = $serializer;
     }
@@ -58,6 +60,7 @@ class CustomerController extends AbstractController
     public function ListCustumerClient(Request $request)
     {
         $client = $this->getUser();
+   
         $CurrentPage = $request->get('page', 1);
         $PageItemsLimit =  $request->get('item', 5);
 
@@ -66,31 +69,36 @@ class CustomerController extends AbstractController
             return  $this->repo->findAll();
         });
       
+        $adapter = new ArrayAdapter($query);
+
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage($PageItemsLimit);
+        $pagerfanta->setCurrentPage($CurrentPage);
+        $customers = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $customers[] = $result;
+        }
+      
+        $fullProductsCount = $this->cache->get('count', function (ItemInterface $item) use ($query) {
+            $item->expiresAfter(10);
+            $list = count($query);
+            return  $list;
+        });
         
-        // $fullProductsCount = $this->cache->get('count', function (ItemInterface $item) use ($query) {
-        //     $item->expiresAfter(10);
-        //     $list = count($query);
-        //     return  $list;
-        // });
-        
-        $customers = $this->paginate->paginate($query, $CurrentPage, $PageItemsLimit)->getItems();
+    
       
         // $lastPage = ceil($fullProductsCount / $PageItemsLimit);
-        // $content = [
-        //     'meta' => [
-        //         'Total customers' => $fullProductsCount,
-        //         'Customers per page (item)' => $PageItemsLimit,
-        //         'Current page (page)' => $CurrentPage,
-        //         'Last Page' => $lastPage
-        //      ],
-        //     'data' => $customers
-        // ];
-        $context = new SerializationContext;
-        $context->create()->setGroups(['list']);
-        $context->enableMaxDepthChecks(true);
+        $content = [
+            'meta' => [
+                'Total customers' => $fullProductsCount,
+                'Customers per page (item)' => $PageItemsLimit,
+                'Current page (page)' => $CurrentPage,
+                'Last Page' => $pagerfanta->getNbPages()
+             ],
+            'data' => $customers
+        ];
 
-
-        $data =  $this->serializer->serialize($customers, 'json', $context);
+        $data =  $this->serializer->serialize($content, 'json', SerializationContext::create()->setGroups(array('list')));
     
         return new JsonResponse($data, '200', [], true);
     }

@@ -28,6 +28,23 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      ),
  *        exclusion = @Hateoas\Exclusion({"detail"})
  * )
+  * @Hateoas\Relation(
+ *      "self",
+ *      href = @Hateoas\Route(
+ *          "api_customers",
+ *          absolute = true
+ *      ),
+ *        exclusion = @Hateoas\Exclusion({"list"})
+ * )
+   * @Hateoas\Relation(
+ *      "Detail",
+ *      href = @Hateoas\Route(
+ *          "api_customer",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      ),
+ *        exclusion = @Hateoas\Exclusion({"list"})
+ * )
  * @Hateoas\Relation(
  *      "self",
  *      href = @Hateoas\Route(
