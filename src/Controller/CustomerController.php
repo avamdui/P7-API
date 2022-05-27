@@ -59,14 +59,12 @@ class CustomerController extends AbstractController
     */
     public function ListCustumerClient(Request $request)
     {
-        $client = $this->getUser();
-   
         $CurrentPage = $request->get('page', 1);
         $PageItemsLimit =  $request->get('item', 5);
 
         $query = $this->cache->get('Customers_list', function (ItemInterface $item) {
             $item->expiresAfter(10);
-            return  $this->repo->findAll();
+            return  $this->repo->findBy(['client' => $this->getUser()->getId()]);
         });
       
         $adapter = new ArrayAdapter($query);
