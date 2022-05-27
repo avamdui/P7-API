@@ -13,7 +13,6 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",
         "fakerphp/faker": "^1.19",
-        "knplabs/knp-paginator-bundle": "^5.8",
         "lexik/jwt-authentication-bundle": "^2.15",
         "nelmio/api-doc-bundle": "^4.8",
         "nelmio/cors-bundle": "^2.2",

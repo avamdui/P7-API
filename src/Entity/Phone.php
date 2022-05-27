@@ -1,11 +1,10 @@
 <?php
-
 namespace App\Entity;
 
+use JMS\Serializer\Annotation\Groups;
 use Hateoas\Configuration\Annotation as Hateoas;
 use OpenApi\Annotations as OA;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -26,7 +25,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "api_phone",
  *          parameters = { "id" = "expr(object.getId())" },
  *          absolute = true,
- *      )
+ *      ),
+ *        exclusion = @Hateoas\Exclusion({"list"})
  * )
  */
 class Phone
@@ -36,48 +36,48 @@ class Phone
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-    * @groups({"Full", "detail"})
+     * @Groups({"list", "detail"})
      */
     private $id;
 
     /**
      *
      * @ORM\Column(type="string", length=255)
-    * @groups({"Full", "detail"})
+     * @Groups({"list", "detail"})
      */
     private $brand;
     /**
      * @ORM\Column(type="string", length=100)
-    * @groups({"Full", "detail"})
+     * @Groups({"list", "detail"})
      */
     private $modelName;
 
     /**
-    * @groups({"Full", "detail"})
+     * @Groups({"list", "detail"})
      * @ORM\Column(type="string", length=255)
      */
     private $ref;
 
     /**
-    * @groups({"Full", "detail"})
+     * @Groups({"list", "detail"})
      * @ORM\Column(type="string", length=255)
      */
     private $description;
     /**
-    * @groups({"detail"})
+     * @Groups({"detail"})
      * @ORM\Column(type="decimal", precision=6, scale=2)
      */
 
     private $price;
 
     /**
-    * @groups({"Full", "detail"})
+     * @Groups({"list", "detail"})
      * @ORM\Column(type="integer"))
      */
     private $stock;
 
     /**
-     *  @Groups("phone:showone")
+     * @Groups({"detail"})
      * @ORM\Column(type="datetime")
      */
     private $createdAt;

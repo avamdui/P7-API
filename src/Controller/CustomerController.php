@@ -14,8 +14,6 @@ use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Hateoas\Representation\Factory\PagerfantaFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -72,20 +70,14 @@ class CustomerController extends AbstractController
         $pagerfanta = new Pagerfanta($adapter);
         $pagerfanta->setMaxPerPage($PageItemsLimit);
         $pagerfanta->setCurrentPage($CurrentPage);
-        $customers = [];
-        foreach ($pagerfanta->getCurrentPageResults() as $result) {
-            $customers[] = $result;
-        }
+        $customers = $pagerfanta->getCurrentPageResults();
       
         $fullProductsCount = $this->cache->get('count', function (ItemInterface $item) use ($query) {
             $item->expiresAfter(10);
             $list = count($query);
             return  $list;
         });
-        
-    
-      
-        // $lastPage = ceil($fullProductsCount / $PageItemsLimit);
+
         $content = [
             'meta' => [
                 'Total customers' => $fullProductsCount,

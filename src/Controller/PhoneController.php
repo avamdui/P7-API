@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use App\Entity\Phone;
@@ -13,21 +17,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
-use Knp\Component\Pager\PaginatorInterface;
 
 class PhoneController extends AbstractController
 {
     private $repo;
     private $cache;
-    private $paginate;
     private $serializer;
-    public function __construct(PhoneRepository $PhoneRepository, PaginatorInterface $paginator, CacheInterface $cache, SerializerInterface $serializer)
+    public function __construct(PhoneRepository $PhoneRepository, CacheInterface $cache, SerializerInterface $serializer)
     {
         $this->repo = $PhoneRepository;
-        $this->paginate = $paginator;
         $this->cache = $cache;
         $this->serializer = $serializer;
     }
@@ -39,7 +39,7 @@ class PhoneController extends AbstractController
      *     description="Returns the list of all smartphones",
      *     @OA\JsonContent(
      *        type="array",
-     *        @OA\Items(ref=@Model(type=Phone::class, groups={"Full"}))
+     *        @OA\Items(ref=@Model(type=Phone::class, groups={"list"}))
      *     )
      * )
     * @OA\Response(response=404, description="Not found" ),
@@ -57,25 +57,32 @@ class PhoneController extends AbstractController
             return  $this->repo->findAll();
         });
         
+        $adapter = new ArrayAdapter($query);
+
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage($PageItemsLimit);
+        $pagerfanta->setCurrentPage($CurrentPage);
+        $phones = $pagerfanta->getCurrentPageResults();
+      
         $fullProductsCount = $this->cache->get('count', function (ItemInterface $item) use ($query) {
             $item->expiresAfter(10);
             $list = count($query);
             return  $list;
         });
-        
-        $Phones = $this->paginate->paginate($query, $CurrentPage, $PageItemsLimit);
-        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
+         
+
         $content = [
             'meta' => [
-                'Total phones' => $fullProductsCount,
-                'Phones per page (item)' => $PageItemsLimit,
+                'Total customers' => $fullProductsCount,
+                'Customers per page (item)' => $PageItemsLimit,
                 'Current page (page)' => $CurrentPage,
-                'Last Page' => $lastPage
+                'Last Page' => $pagerfanta->getNbPages()
              ],
-            'data' => $Phones
+            'data' => $phones
         ];
 
-        $data =  $this->serializer->serialize($content, 'json', ['groups' => 'Full']);
+        $data =  $this->serializer->serialize($content, 'json', SerializationContext::create()->setGroups(array('list')));
+    
         return new JsonResponse($data, '200', [], true);
     }
 
@@ -109,7 +116,7 @@ class PhoneController extends AbstractController
        
         $id = $phone->getId();
         $phone = $entityManager->getRepository(Phone::class)->findOneBy(['id' => $id]);
-        $data = $this->serializer->serialize($phone, 'json', ['groups' => 'detail']);
+        $data =  $this->serializer->serialize($phone, 'json', SerializationContext::create()->setGroups(array('detail')));
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 }

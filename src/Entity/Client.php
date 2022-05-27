@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use JMS\Serializer\Annotation\Groups;
 use Hateoas\Configuration\Annotation as Hateoas;
 use OpenApi\Annotations as OA;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,6 +25,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *  fields={"email"},
  *  message="Email déjà utilisé"
  * )
+ *  @Hateoas\Relation(
+ *      "self",
+ *      href = @Hateoas\Route(
+ *          "api_client_id",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      ),
+ *        exclusion = @Hateoas\Exclusion({"detail"})
+ * )
  */
 
 class Client implements UserInterface, PasswordAuthenticatedUserInterface
@@ -33,11 +42,11 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-    * @groups({"Full", "detail"})
+    * @Groups({"list", "detail"})
      */
     private $id;
     /**
-    * @groups({"Full", "detail", "login"})
+    * @Groups({"list", "detail", "login"})
     * @ORM\Column(type="string", length=100)
     */
     private $username;
@@ -45,12 +54,12 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     /**
     * @ORM\Column(type="json")
     * @OA\Property(type="array", @OA\Items(type="string"))
-    * @groups({"detail"})
+    * @Groups({"detail"})
      */
     private $roles = [];
     /**
      * @ORM\Column(type="string", length=100)
-     * @groups({"login"})
+     * @Groups({"login"})
      * @Assert\Length(
      *      min = 8,
      *      max = 254,
@@ -67,11 +76,11 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
     * @ORM\Column(type="string", length=255)
-    * @groups({"Full", "detail"})
+    * @Groups({"list", "detail"})
      */
     private $company;
     /**
-    * @groups({"Full", "detail"})
+    * @Groups({"list", "detail"})
      * @ORM\Column(type="string", length=255)
      */
     private $email;

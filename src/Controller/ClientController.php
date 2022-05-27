@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use App\Entity\Client;
@@ -9,25 +14,21 @@ use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use OpenApi\Annotations as OA;
-use Knp\Component\Pager\PaginatorInterface;
 
 class ClientController extends AbstractController
 {
     private $repo;
     private $cache;
-    private $paginate;
     private $serializer;
-    public function __construct(ClientRepository $ClientRepository, PaginatorInterface $paginator, CacheInterface $cache, SerializerInterface $serializer)
+    public function __construct(ClientRepository $ClientRepository, CacheInterface $cache, SerializerInterface $serializer)
     {
         $this->repo = $ClientRepository;
-        $this->paginate = $paginator;
         $this->cache = $cache;
         $this->serializer = $serializer;
     }
@@ -55,7 +56,7 @@ class ClientController extends AbstractController
      *     description="Returns the list of clients",
      *     @OA\JsonContent(
      *        type="array",
-     *        @OA\Items(ref=@Model(type=Client::class, groups={"Full"}))
+     *        @OA\Items(ref=@Model(type=Client::class, groups={"list"}))
      *     )
      * )
     * @OA\Response(response=404, description="Not found" ),
@@ -73,25 +74,31 @@ class ClientController extends AbstractController
             return  $this->repo->findAll();
         });
         
+        $adapter = new ArrayAdapter($query);
+
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage($PageItemsLimit);
+        $pagerfanta->setCurrentPage($CurrentPage);
+        $clients = $pagerfanta->getCurrentPageResults();
+      
         $fullProductsCount = $this->cache->get('count', function (ItemInterface $item) use ($query) {
             $item->expiresAfter(10);
             $list = count($query);
             return  $list;
         });
-        
-        $clients = $this->paginate->paginate($query, $CurrentPage, $PageItemsLimit);
-        $lastPage = ceil($fullProductsCount / $PageItemsLimit);
+
         $content = [
             'meta' => [
-                'Total clients' => $fullProductsCount,
-                'Clients per page (item)' => $PageItemsLimit,
+                'Total customers' => $fullProductsCount,
+                'Customers per page (item)' => $PageItemsLimit,
                 'Current page (page)' => $CurrentPage,
-                'Last Page' => $lastPage
+                'Last Page' => $pagerfanta->getNbPages()
              ],
             'data' => $clients
         ];
-        // dd($content); -->OK
-        $data =  $this->serializer->serialize($content, 'json', ['groups' => 'Full']);
+
+        $data =  $this->serializer->serialize($content, 'json', SerializationContext::create()->setGroups(array('list')));
+    
         return new JsonResponse($data, '200', [], true);
     }
 
@@ -125,7 +132,7 @@ class ClientController extends AbstractController
 
         $id = $client->getId();
         $client = $entityManager->getRepository(Client::class)->findOneBy(['id' => $id]);
-        $data = $this->serializer->serialize($client, 'json', ['groups' => 'detail']);
+        $data = $this->serializer->serialize($client, 'json', SerializationContext::create()->setGroups(array('detail')));
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 }
