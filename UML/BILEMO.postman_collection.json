@@ -1,0 +1,458 @@
+{
+	"info": {
+		"_postman_id": "e57eaa1c-379e-4007-aee2-c533e32840f2",
+		"name": "BILEMO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20371108"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"protocolProfileBehavior": {
+				"strictSSL": false,
+				"followAuthorizationHeader": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"BilemoAdmin\",\r\n    \"password\": \"Admin1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login_check",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login_check"
+					]
+				},
+				"description": "Login"
+			},
+			"response": []
+		},
+		{
+			"name": "Phones ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTIwNzUzNjIsImV4cCI6MTY1NTY3NTM2Miwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6IkJpbGVtb0FkbWluIn0.jdtqKNvi1PBebciw72yHC9daDrtjCENcabfr_NXrTWuH7hyTxyXmp4bJ06Q7s1gdWjA39N6_AX0Q25wW2I98XPuHeut81X69ofwISZMkZ5zENAC9vC3iTaGrkKPyKfLZghK0BH20xAzhaBJBOlmq1gAEY6ZqPAOAVTXfN0hP-u8-oEeM1jT202D3jEEKWAhyMxYw31NvWhCYkfphBjwydDcQdctC8BK0nV94xH8c-kK0OZ3WG33AF_r3pnjCgYOfcFO6qCxDGq7XU0BMl2jaj1JMpOysBkcOpoujRQvTHsxWID2oSaNcf-lrsZz4v3dlEkuGKY9bsuzHhA9JODLKLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "pages",
+						"value": "2",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/phone/28",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"phone",
+						"28"
+					],
+					"query": [
+						{
+							"key": null,
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTIwNzUzNjIsImV4cCI6MTY1NTY3NTM2Miwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6IkJpbGVtb0FkbWluIn0.jdtqKNvi1PBebciw72yHC9daDrtjCENcabfr_NXrTWuH7hyTxyXmp4bJ06Q7s1gdWjA39N6_AX0Q25wW2I98XPuHeut81X69ofwISZMkZ5zENAC9vC3iTaGrkKPyKfLZghK0BH20xAzhaBJBOlmq1gAEY6ZqPAOAVTXfN0hP-u8-oEeM1jT202D3jEEKWAhyMxYw31NvWhCYkfphBjwydDcQdctC8BK0nV94xH8c-kK0OZ3WG33AF_r3pnjCgYOfcFO6qCxDGq7XU0BMl2jaj1JMpOysBkcOpoujRQvTHsxWID2oSaNcf-lrsZz4v3dlEkuGKY9bsuzHhA9JODLKLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "pages",
+						"value": "2",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/customer/11",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"customer",
+						"11"
+					],
+					"query": [
+						{
+							"key": null,
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Client ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTIwNzUzNjIsImV4cCI6MTY1NTY3NTM2Miwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6IkJpbGVtb0FkbWluIn0.jdtqKNvi1PBebciw72yHC9daDrtjCENcabfr_NXrTWuH7hyTxyXmp4bJ06Q7s1gdWjA39N6_AX0Q25wW2I98XPuHeut81X69ofwISZMkZ5zENAC9vC3iTaGrkKPyKfLZghK0BH20xAzhaBJBOlmq1gAEY6ZqPAOAVTXfN0hP-u8-oEeM1jT202D3jEEKWAhyMxYw31NvWhCYkfphBjwydDcQdctC8BK0nV94xH8c-kK0OZ3WG33AF_r3pnjCgYOfcFO6qCxDGq7XU0BMl2jaj1JMpOysBkcOpoujRQvTHsxWID2oSaNcf-lrsZz4v3dlEkuGKY9bsuzHhA9JODLKLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "pages",
+						"value": "2",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/phone/28",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"phone",
+						"28"
+					],
+					"query": [
+						{
+							"key": null,
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Phones ALL",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTIwNzUzNjIsImV4cCI6MTY1NTY3NTM2Miwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6IkJpbGVtb0FkbWluIn0.jdtqKNvi1PBebciw72yHC9daDrtjCENcabfr_NXrTWuH7hyTxyXmp4bJ06Q7s1gdWjA39N6_AX0Q25wW2I98XPuHeut81X69ofwISZMkZ5zENAC9vC3iTaGrkKPyKfLZghK0BH20xAzhaBJBOlmq1gAEY6ZqPAOAVTXfN0hP-u8-oEeM1jT202D3jEEKWAhyMxYw31NvWhCYkfphBjwydDcQdctC8BK0nV94xH8c-kK0OZ3WG33AF_r3pnjCgYOfcFO6qCxDGq7XU0BMl2jaj1JMpOysBkcOpoujRQvTHsxWID2oSaNcf-lrsZz4v3dlEkuGKY9bsuzHhA9JODLKLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "pages",
+						"value": "2",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/phones",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"phones"
+					],
+					"query": [
+						{
+							"key": null,
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customers ALL",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTIwNzUzNjIsImV4cCI6MTY1NTY3NTM2Miwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6IkJpbGVtb0FkbWluIn0.jdtqKNvi1PBebciw72yHC9daDrtjCENcabfr_NXrTWuH7hyTxyXmp4bJ06Q7s1gdWjA39N6_AX0Q25wW2I98XPuHeut81X69ofwISZMkZ5zENAC9vC3iTaGrkKPyKfLZghK0BH20xAzhaBJBOlmq1gAEY6ZqPAOAVTXfN0hP-u8-oEeM1jT202D3jEEKWAhyMxYw31NvWhCYkfphBjwydDcQdctC8BK0nV94xH8c-kK0OZ3WG33AF_r3pnjCgYOfcFO6qCxDGq7XU0BMl2jaj1JMpOysBkcOpoujRQvTHsxWID2oSaNcf-lrsZz4v3dlEkuGKY9bsuzHhA9JODLKLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "pages",
+						"value": "2",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/customers",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"customers"
+					],
+					"query": [
+						{
+							"key": null,
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customers ALL NO TOKEN",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTIwNzUzNjIsImV4cCI6MTY1NTY3NTM2Miwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6IkJpbGVtb0FkbWluIn0.jdtqKNvi1PBebciw72yHC9daDrtjCENcabfr_NXrTWuH7hyTxyXmp4bJ06Q7s1gdWjA39N6_AX0Q25wW2I98XPuHeut81X69ofwISZMkZ5zENAC9vC3iTaGrkKPyKfLZghK0BH20xAzhaBJBOlmq1gAEY6ZqPAOAVTXfN0hP-u8-oEeM1jT202D3jEEKWAhyMxYw31NvWhCYkfphBjwydDcQdctC8BK0nV94xH8c-kK0OZ3WG33AF_r3pnjCgYOfcFO6qCxDGq7XU0BMl2jaj1JMpOysBkcOpoujRQvTHsxWID2oSaNcf-lrsZz4v3dlEkuGKY9bsuzHhA9JODLKLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "pages",
+						"value": "2",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/customers",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"customers"
+					],
+					"query": [
+						{
+							"key": null,
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Clients ALL",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTIwNzUzNjIsImV4cCI6MTY1NTY3NTM2Miwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6IkJpbGVtb0FkbWluIn0.jdtqKNvi1PBebciw72yHC9daDrtjCENcabfr_NXrTWuH7hyTxyXmp4bJ06Q7s1gdWjA39N6_AX0Q25wW2I98XPuHeut81X69ofwISZMkZ5zENAC9vC3iTaGrkKPyKfLZghK0BH20xAzhaBJBOlmq1gAEY6ZqPAOAVTXfN0hP-u8-oEeM1jT202D3jEEKWAhyMxYw31NvWhCYkfphBjwydDcQdctC8BK0nV94xH8c-kK0OZ3WG33AF_r3pnjCgYOfcFO6qCxDGq7XU0BMl2jaj1JMpOysBkcOpoujRQvTHsxWID2oSaNcf-lrsZz4v3dlEkuGKY9bsuzHhA9JODLKLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "pages",
+						"value": "2",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/clients",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"clients"
+					],
+					"query": [
+						{
+							"key": null,
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer POST",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTIwNzUzNjIsImV4cCI6MTY1NTY3NTM2Miwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6IkJpbGVtb0FkbWluIn0.jdtqKNvi1PBebciw72yHC9daDrtjCENcabfr_NXrTWuH7hyTxyXmp4bJ06Q7s1gdWjA39N6_AX0Q25wW2I98XPuHeut81X69ofwISZMkZ5zENAC9vC3iTaGrkKPyKfLZghK0BH20xAzhaBJBOlmq1gAEY6ZqPAOAVTXfN0hP-u8-oEeM1jT202D3jEEKWAhyMxYw31NvWhCYkfphBjwydDcQdctC8BK0nV94xH8c-kK0OZ3WG33AF_r3pnjCgYOfcFO6qCxDGq7XU0BMl2jaj1JMpOysBkcOpoujRQvTHsxWID2oSaNcf-lrsZz4v3dlEkuGKY9bsuzHhA9JODLKLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"Alex\",\r\n    \"lastname\": \"Duchien\",\r\n    \"email\": \"Alex.duchien@voila.fr\",\r\n    \"phone_number\": \"+33607080911\",\r\n    \"password\": \"Password1\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/customer/create",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"customer",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer DELETE",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTI2OTIyMDYsImV4cCI6MTY1NjI5MjIwNiwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6IkJpbGVtb0FkbWluIn0.Ec0Xa02rtCJVy_vf9PZzqQrXA6MQ-a1bp68mQChn-GTGSPTbFd7QXD5eyQWo2Jj4QTSzp53eJiIVxhTCe_B3KFpca8kxT6tjJ3LYiZKNSiSEkNgbg6jZM15P7OJTUu8SD2vS2-ZFQJM2vBOoDHPyR5woxYWYv_tcctMK81zJdMcxeRGUULoEXz0YDCPw4Vm3YYSyEvoKBwNyx7DHoxEGV5A9C1PqsLkKVuMn_JBUqZab-TeWJrkB32ZBtfC0tGrI6Hh6EcZoSWJMKYCdkdvwcjqrcAzZogYLMqm_sbWEbfiZZcfF3pOyRAFnOniv6ojMYNYclOqGAlnLOvGHqsq2lA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://127.0.0.1:8000/api/customer/52",
+					"protocol": "https",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"customer",
+						"52"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
