@@ -112,7 +112,19 @@ class CustomerController extends AbstractController
      */
     public function show($id, EntityManagerInterface $entityManager)
     {
+        // Vérification autorisation d'accès
+        $loggedClient= $this->getUser()->getId();
         $customer = $entityManager->getRepository(Customer::class)->find($id);
+        $Client = $customer->getClient()->getId();
+        if ($loggedClient !== $Client) {
+            $data= [
+                'status' => 401,
+                'message' => 'Access Denied'
+            ];
+            return $this->json($data, 404);
+        }
+
+        // Mauvais ID
         if (!$customer) {
             $data= [
             'status' => 404,
@@ -121,7 +133,7 @@ class CustomerController extends AbstractController
             return $this->json($data, 404);
         }
         
-        $id = $customer->getId();
+        
         $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $id]);
         $data = $this->serializer->serialize($customer, 'json', SerializationContext::create()->setGroups(array('detail')));
         return new JsonResponse($data, 200, [], true);
@@ -175,7 +187,18 @@ class CustomerController extends AbstractController
     */
     public function DeleteCustumerClient($id, EntityManagerInterface $entityManager)
     {
+        // Vérification autorisation d'accès
+        $loggedClient= $this->getUser()->getId();
         $customer = $entityManager->getRepository(Customer::class)->find($id);
+        $Client = $customer->getClient()->getId();
+        if ($loggedClient !== $Client) {
+            $data= [
+                'status' => 403,
+                'message' => 'Access Denied'
+            ];
+            return $this->json($data, 404);
+        }
+
         if (!$customer) {
             $data= [
             'status' => 404,
