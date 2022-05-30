@@ -154,13 +154,13 @@ class CustomerController extends AbstractController
             $customer->setCreatedAt(new DateTime())
                      ->setClient($this->getUser());
             $error = $validator->validate($customer);
-
             if (count($error)>0) {
                 return $this->json($error, 400);
             }
+           
             $em->persist($customer);
             $em->flush();
-            $data = $this->serializer->serialize($customer, 'json', SerializationContext::create()->setGroups(array('detail')));
+            $data = $this->serializer->serialize($customer, 'json', SerializationContext::create()->setGroups(array('create')));
             return new JsonResponse($data, Response::HTTP_CREATED, [], true);
         } catch (NotEncodableValueException $e) {
             return $this->json(array('status'=>400, 'message'=>$e->getMessage()), 400);

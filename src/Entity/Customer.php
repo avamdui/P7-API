@@ -114,7 +114,7 @@ class Customer
     private $firstname;
 
     /**
-     * @Assert\NotBlank
+    * @Assert\NotBlank
     * @ORM\Column(type="string", length=255)
     * @Groups({"list", "detail", "create"})
     */
@@ -130,7 +130,6 @@ class Customer
 
     /**
     * @Assert\NotBlank
-
     * @ORM\Column(type="string", length=255)
     * @OA\Property(example="Alex.duchien@voila.fr")
     * @Groups({"list", "detail", "create"})
@@ -138,14 +137,14 @@ class Customer
     private $email;
 
     /**
-     * @Assert\NotBlank
+    * @Assert\NotBlank
     * @ORM\Column(type="string", length=255)
     * @Groups({"list", "detail", "create"})
     */
     private $password;
 
     /**
-     * @Assert\NotBlank
+    * @Assert\NotBlank
     * @ORM\Column(type="datetime")
     * @Groups({"detail"})
     */
