@@ -44,14 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      ),
  *        exclusion = @Hateoas\Exclusion({"list"})
  * )
- * @Hateoas\Relation(
- *      "self",
- *      href = @Hateoas\Route(
- *          "api_customers",
- *          absolute = true
- *      ),
- *        exclusion = @Hateoas\Exclusion({"detail"})
- * )
+
   * @Hateoas\Relation(
  *      "listAll",
  *      href = @Hateoas\Route(

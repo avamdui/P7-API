@@ -18,7 +18,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *  fields={"ref"},
  *  message="Référence déjà utilisé"
  * )
- *
+ * @Hateoas\Relation(
+ *      "listAll",
+ *      href = @Hateoas\Route(
+ *          "api_phones",
+ *          absolute = true
+ *      ),
+ *        exclusion = @Hateoas\Exclusion({"detail"})
+ * )
  * @Hateoas\Relation(
  *      "self",
  *      href = @Hateoas\Route(

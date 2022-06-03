@@ -26,10 +26,27 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *  message="Email déjà utilisé"
  * )
  *  @Hateoas\Relation(
+ *      "Detail",
+ *      href = @Hateoas\Route(
+ *          "api_client_id",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      ),
+ *        exclusion = @Hateoas\Exclusion({"list"})
+ * )
+ *  @Hateoas\Relation(
  *      "self",
  *      href = @Hateoas\Route(
  *          "api_client_id",
  *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      ),
+ *        exclusion = @Hateoas\Exclusion({"detail"})
+ * )
+ *  * @Hateoas\Relation(
+ *      "listAll",
+ *      href = @Hateoas\Route(
+ *          "api_clients",
  *          absolute = true
  *      ),
  *        exclusion = @Hateoas\Exclusion({"detail"})
